@@ -1,5 +1,5 @@
 """
-项目配置文件
+Project configuration file
 """
 
 PROJECT_NAME = "LLM Agent Framework for Structural Steel Design"
@@ -7,21 +7,21 @@ VERSION = "1.0.0"
 AUTHOR = "Kai Chen"
 EMAIL = "kchen137@alumni.jh.edu"
 
-# 默认配置
+# Default configuration
 DEFAULT_MODEL_PATH = "PINN model/normal/model_20250123_165719.pth"
 DEFAULT_LLM_MODEL = "qwen-max"
 DEFAULT_BASE_URL = "https://dashscope.aliyuncs.com/compatible-mode/v1"
 
-# 模型参数
+# Model parameters
 PINN_INPUT_DIM = 6
 PINN_HIDDEN_DIM = 64
 PINN_OUTPUT_DIM = 1
 
-# 物理常数
+# Physical constants
 STEEL_ELASTIC_MODULUS = 29000  # ksi
-LOG_SHIFT = 0.01  # 对数变换偏移量
+LOG_SHIFT = 0.01  # Logarithmic transformation offset
 
-# 参数范围（用于验证）
+# Parameter range（For validation）
 PARAM_RANGES = {
     'A': (0.1, 100.0),      # in²
     'I': (1.0, 1000.0),     # in⁴
@@ -31,9 +31,9 @@ PARAM_RANGES = {
     'delta_o': (0.01, 2.0)  # in
 }
 
-# 工具描述
+# Tool description
 TOOLS_DESCRIPTION = {
-    'calculate_column_strength': '计算钢柱抗压强度',
-    'calculate_beam_strength': '计算钢梁抗弯强度（开发中）'
+    'calculate_column_strength': 'Calculate steel column compressive strength',
+    'calculate_beam_strength': 'Calculate steel beam flexural strength（开发中）'
 }
 

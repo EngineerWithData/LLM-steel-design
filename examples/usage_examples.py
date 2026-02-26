@@ -12,43 +12,43 @@ from agent.tools import SteelStrengthCalculator
 
 
 def example_1_direct_calculation():
-    """示例1: 直接调用计算工具"""
+    """示例1: 直接调用Calculate工具"""
     print("=" * 60)
-    print("示例1: 直接调用钢柱强度计算工具")
+    print("示例1: 直接调用钢柱强度Calculate工具")
     print("=" * 60)
     
-    # 初始化计算器
+    # Initialize calculator
     model_path = "../PINN model/normal/model_20250123_165719.pth"
     calculator = SteelStrengthCalculator(model_path=model_path)
     
     # 定义钢柱参数
     column_params = {
-        'A': 10.0,      # 截面积 10 in²
-        'I': 100.0,     # 惯性矩 100 in⁴
-        'c': 5.0,       # 距离 5 in
-        'L': 120.0,     # 长度 120 in (10 ft)
-        'fy': 50.0,     # 屈服强度 50 ksi
-        'delta_o': 0.1  # 初始缺陷 0.1 in
+        'A': 10.0,      # Cross-sectional area 10 in²
+        'I': 100.0,     # Moment of inertia 100 in⁴
+        'c': 5.0,       # Distance 5 in
+        'L': 120.0,     # Length 120 in (10 ft)
+        'fy': 50.0,     # Yield strength 50 ksi
+        'delta_o': 0.1  # Initial imperfection 0.1 in
     }
     
     print("\n钢柱参数:")
-    print(f"  截面积 A = {column_params['A']} in²")
-    print(f"  惯性矩 I = {column_params['I']} in⁴")
-    print(f"  距离 c = {column_params['c']} in")
-    print(f"  长度 L = {column_params['L']} in")
-    print(f"  屈服强度 fy = {column_params['fy']} ksi")
-    print(f"  初始缺陷 δ₀ = {column_params['delta_o']} in")
+    print(f"  Cross-sectional area A = {column_params['A']} in²")
+    print(f"  Moment of inertia I = {column_params['I']} in⁴")
+    print(f"  Distance c = {column_params['c']} in")
+    print(f"  Length L = {column_params['L']} in")
+    print(f"  Yield strength fy = {column_params['fy']} ksi")
+    print(f"  Initial imperfection δ₀ = {column_params['delta_o']} in")
     
-    # 计算强度
+    # Calculate强度
     result = calculator.calculate_column_strength(column_params)
     
     if result['success']:
-        print("\n计算结果:")
-        print(f"  ✓ 名义抗压强度 Pn = {result['nominal_strength_Pn']:.2f} kip")
-        print(f"  ✓ 理论强度 = {result['theoretical_strength']:.2f} kip")
-        print(f"  ✓ 预测/理论比值 = {result['prediction_ratio']:.3f}")
+        print("\nCalculation result:")
+        print(f"  ✓ Nominal compressive strength Pn = {result['nominal_strength_Pn']:.2f} kip")
+        print(f"  ✓ Theoretical strength = {result['theoretical_strength']:.2f} kip")
+        print(f"  ✓ 预测/理论Ratio = {result['prediction_ratio']:.3f}")
     else:
-        print(f"\n✗ 计算失败: {result['error']}")
+        print(f"\n✗ CalculateFailed: {result['error']}")
     
     print()
 
@@ -64,14 +64,14 @@ def example_2_agent_chat():
     agent = SteelDesignAgent(model_path=model_path)
     
     if not agent.client:
-        print("\n⚠ LLM客户端未初始化，请检查.env配置")
+        print("\n⚠ LLM客户端Not initialized，请检查.env配置")
         print("跳过此示例\n")
         return
     
     # 模拟对话
     conversations = [
-        "你好，我需要计算一个钢柱的强度",
-        "钢柱参数：截面积10平方英寸，惯性矩100，c是5英寸，长度120英寸，屈服强度50ksi，初始缺陷0.1英寸",
+        "你好，我需要Calculate一个钢柱的强度",
+        "钢柱参数：Cross-sectional area10square inches，Moment of inertia100，c是5inches，Length120inches，Yield strength50ksi，Initial imperfection0.1inches",
     ]
     
     print("\n开始对话:")
@@ -128,7 +128,7 @@ def example_3_batch_design():
     
     print("\n设计方案对比:")
     print("-" * 80)
-    print(f"{'方案':<20} {'长度(in)':<12} {'Pn(kip)':<12} {'理论(kip)':<12} {'比值':<8}")
+    print(f"{'方案':<20} {'Length(in)':<12} {'Pn(kip)':<12} {'理论(kip)':<12} {'Ratio':<8}")
     print("-" * 80)
     
     for case in design_cases:
@@ -142,19 +142,19 @@ def example_3_batch_design():
                   f"{result['prediction_ratio']:<8.3f}")
     
     print("-" * 80)
-    print("\n观察: 随着柱长度增加，抗压强度显著降低（细长比效应）\n")
+    print("\n观察: 随着柱Length增加，抗压强度显著降低（细长比效应）\n")
 
 
 def example_4_parametric_study():
-    """示例4: 参数化研究 - 屈服强度影响"""
+    """示例4: 参数化研究 - Yield strength影响"""
     print("=" * 60)
-    print("示例4: 参数化研究 - 屈服强度对柱强度的影响")
+    print("示例4: 参数化研究 - Yield strength对柱强度的影响")
     print("=" * 60)
     
     model_path = "../PINN model/normal/model_20250123_165719.pth"
     calculator = SteelStrengthCalculator(model_path=model_path)
     
-    # 固定其他参数，改变屈服强度
+    # 固定其他参数，改变Yield strength
     base_params = {
         'A': 10.0,
         'I': 100.0,
@@ -170,7 +170,7 @@ def example_4_parametric_study():
     print(f"  I = {base_params['I']} in⁴")
     print(f"  L = {base_params['L']} in")
     
-    print("\n屈服强度影响分析:")
+    print("\nYield strength影响分析:")
     print("-" * 60)
     print(f"{'fy (ksi)':<12} {'Pn (kip)':<15} {'增长率':<12}")
     print("-" * 60)
@@ -189,7 +189,7 @@ def example_4_parametric_study():
             prev_pn = pn
     
     print("-" * 60)
-    print("\n观察: 屈服强度提高可以显著增加柱的抗压强度\n")
+    print("\n观察: Yield strength提高可以显著增加柱的抗压强度\n")
 
 
 def main():
@@ -201,10 +201,10 @@ def main():
     print("\n")
     
     try:
-        # 检查模型文件
+        # Check model file
         model_path = "../PINN model/normal/model_20250123_165719.pth"
         if not os.path.exists(model_path):
-            print(f"⚠ 警告: 未找到模型文件 {model_path}")
+            print(f"⚠ Warning: 未找到模型文件 {model_path}")
             print("某些示例可能无法运行\n")
         
         # 运行示例
@@ -222,7 +222,7 @@ def main():
         print("=" * 60)
         print("所有示例演示完成！")
         print("=" * 60)
-        print("\n要启动交互式Agent，请运行: python agent.py")
+        print("\n要启动交互式Agent，Please run: python agent.py")
         print()
         
     except KeyboardInterrupt:

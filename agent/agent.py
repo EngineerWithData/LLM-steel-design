@@ -1,6 +1,6 @@
 """
-LLM Agent主程序
-集成OpenAI API和钢构件强度计算工具
+LLM Agent Main Program
+Integrating OpenAI API and Steel Component Strength Calculation Tools
 """
 
 import os
@@ -10,32 +10,32 @@ from openai import OpenAI
 from dotenv import load_dotenv
 from .tools.steel_strength_tools import SteelStrengthCalculator, STEEL_STRENGTH_TOOLS
 
-# 加载环境变量
+# Load environment variables
 load_dotenv()
 
 
 class SteelDesignAgent:
-    """钢结构设计LLM Agent"""
+    """Steel Structure Design LLM Agent"""
     
     def __init__(self, model_path: str = None, api_key: str = None, base_url: str = None, model_name: str = None):
         """
-        初始化Agent
+        Initialize Agent
         
         Args:
-            model_path: PINN模型路径
-            api_key: API密钥（优先使用此参数，否则从环境变量读取）
-            base_url: API基础URL（优先使用此参数，否则从环境变量读取）
-            model_name: 模型名称（默认使用qwen-max）
+            model_path: PINN model path
+            api_key: API key (use this parameter first, otherwise read from environment variables)
+            base_url: API base URL (use this parameter first, otherwise read from environment variables)
+            model_name: Model name (default: qwen-max)
         """
-        # 初始化API配置
+        # Initialize API configuration
         self.api_key = api_key or os.getenv('DASHSCOPE_API_KEY') or os.getenv('OPENAI_API_KEY')
         self.base_url = base_url or os.getenv('LLM_BASE_URL', 'https://dashscope.aliyuncs.com/compatible-mode/v1')
         self.model_name = model_name or os.getenv('LLM_MODEL', 'qwen-max')
         
         if not self.api_key:
-            print("警告: 未设置API密钥，请在.env文件中设置DASHSCOPE_API_KEY")
+            print("Warning: API key not set. Please set DASHSCOPE_API_KEY in .env file")
         
-        # 初始化OpenAI客户端（兼容阿里云DashScope）
+        # Initialize OpenAI client (compatible with Alibaba Cloud DashScope)
         try:
             self.client = OpenAI(
                 api_key=self.api_key,
@@ -43,134 +43,134 @@ class SteelDesignAgent:
             ) if self.api_key else None
             
             if self.client:
-                print(f"✓ LLM客户端已初始化")
+                print(f"✓ LLM client initialized")
                 print(f"  - Base URL: {self.base_url}")
                 print(f"  - Model: {self.model_name}")
         except Exception as e:
-            print(f"✗ LLM客户端初始化失败: {e}")
+            print(f"✗ LLM client initialization failed: {e}")
             self.client = None
         
-        # 初始化工具
+        # Initialize tools
         self.calculator = SteelStrengthCalculator(model_path=model_path)
         
-        # 对话历史
+        # Conversation history
         self.conversation_history = []
         
-        # 系统提示词
-        self.system_prompt = """你是一个专业的结构钢设计助手，名叫"钢构助手"。你具备以下能力：
+        # System prompt
+        self.system_prompt = """You are a professional structural steel design assistant named "Steel Design Assistant". You have the following capabilities:
 
-## 核心功能
+## Core Functions
 
-1. **钢柱强度计算**: 使用先进的PINN（物理信息神经网络）模型计算钢柱的抗压强度
-2. **参数解释**: 帮助用户理解各种钢结构参数的含义
-3. **设计建议**: 基于AISC规范提供专业的设计建议
-4. **多轮对话**: 能够记住上下文，进行连贯的多轮对话
+1. **Steel Column Strength Calculation**: Use advanced PINN (Physics-Informed Neural Network) models to calculate the compressive strength of steel columns
+2. **Parameter Explanation**: Help users understand the meaning of various steel structure parameters
+3. **Design Recommendations**: Provide professional design recommendations based on AISC specifications
+4. **Multi-turn Dialogue**: Remember context and conduct coherent multi-turn conversations
 
-## 工作流程
+## Workflow
 
-### 当用户询问钢柱强度计算时：
+### When users ask about steel column strength calculation:
 
-1. **检查参数完整性**
-   - 仔细检查用户是否提供了所有必需的参数
-   - 必需参数：A（截面积）、I（惯性矩）、c（距离）、L（长度）、fy（屈服强度）、delta_o（初始缺陷）
+1. **Check Parameter Completeness**
+   - Carefully check if the user has provided all required parameters
+   - Required parameters: A (cross-sectional area), I (moment of inertia), c (distance), L (length), fy (yield strength), delta_o (initial imperfection)
 
-2. **参数不完整时**
-   - 友好地告诉用户缺少哪些参数
-   - 清楚地说明每个参数的含义和单位
-   - 可以提供典型值作为参考
-   - 等待用户补充信息，不要调用工具
+2. **When Parameters are Incomplete**
+   - Kindly tell the user which parameters are missing
+   - Clearly explain the meaning and unit of each parameter
+   - Provide typical values as reference
+   - Wait for the user to supplement information, do not call tools
 
-3. **参数完整时**
-   - 调用calculate_column_strength工具进行计算
-   - 用清晰、专业的语言解释结果
-   - 提供设计建议
+3. **When Parameters are Complete**
+   - Call the calculate_column_strength tool for calculation
+   - Explain results in clear, professional language
+   - Provide design recommendations
 
-### 当用户询问与钢结构设计无关的问题时：
+### When users ask questions unrelated to steel structure design:
 
-- 礼貌地回答用户的问题
-- 如果是一般性问题（如问候、闲聊），友好地回应
-- 如果是其他专业领域的问题，诚实地说明你的专长是钢结构设计
-- 适时引导用户回到钢结构设计话题
+- Politely answer the user's questions
+- If it's a general question (such as greetings, small talk), respond friendly
+- If it's a question from another professional field, honestly explain that your expertise is in steel structure design
+- Guide users back to steel structure design topics when appropriate
 
-### 多轮对话处理：
+### Multi-turn Dialogue Handling:
 
-- 记住之前对话中提到的参数和信息
-- 如果用户在后续对话中补充参数，将其与之前的信息结合
-- 保持对话的连贯性和上下文理解
+- Remember parameters and information mentioned in previous conversations
+- If the user supplements parameters in subsequent conversations, combine them with previous information
+- Maintain conversation coherence and context understanding
 
-## 参数说明
+## Parameter Description
 
-| 参数 | 符号 | 单位 | 说明 | 典型范围 |
-|------|------|------|------|----------|
-| 截面积 | A | in² | 钢柱横截面积 | 5-50 |
-| 惯性矩 | I | in⁴ | 截面惯性矩 | 50-500 |
-| 距离 | c | in | 截面中心到边缘距离 | 2-10 |
-| 长度 | L | in | 柱的有效长度 | 60-300 |
-| 屈服强度 | fy | ksi | 钢材屈服强度 | 36-70 |
-| 初始缺陷 | delta_o | in | 初始几何缺陷 | 0.05-0.5 |
+| Parameter | Symbol | Unit | Description | Typical Range |
+|-----------|--------|------|-------------|---------------|
+| Cross-sectional Area | A | in² | Steel column cross-sectional area | 5-50 |
+| Moment of Inertia | I | in⁴ | Section moment of inertia | 50-500 |
+| Distance | c | in | Distance from section center to edge | 2-10 |
+| Length | L | in | Effective length of column | 60-300 |
+| Yield Strength | fy | ksi | Steel yield strength | 36-70 |
+| Initial Imperfection | delta_o | in | Initial geometric imperfection | 0.05-0.5 |
 
-## 回答风格
+## Response Style
 
-- 使用中文回答
-- 保持专业但友好的语气
-- 对于专业术语，适当解释
-- 对于不确定的问题，诚实说明
-- 鼓励用户提问和讨论
+- Respond in English
+- Maintain a professional but friendly tone
+- Explain technical terms appropriately
+- Be honest about uncertain questions
+- Encourage users to ask questions and discuss
 
-## 示例对话
+## Example Dialogue
 
-**用户**: 我想计算钢柱强度
-**你**: 好的！我可以帮您计算钢柱的抗压强度。请提供以下参数：
-- A（截面积，单位in²）
-- I（惯性矩，单位in⁴）
-- c（截面中心到边缘距离，单位in）
-- L（柱长度，单位in）
-- fy（屈服强度，单位ksi）
-- delta_o（初始缺陷，单位in）
+**User**: I want to calculate steel column strength
+**You**: Great! I can help you calculate the compressive strength of a steel column. Please provide the following parameters:
+- A (cross-sectional area, unit: in²)
+- I (moment of inertia, unit: in⁴)
+- c (distance from section center to edge, unit: in)
+- L (column length, unit: in)
+- fy (yield strength, unit: ksi)
+- delta_o (initial imperfection, unit: in)
 
-您可以一次性提供所有参数，或者逐个告诉我。
+You can provide all parameters at once, or tell me one by one.
 
-**用户**: A=10, I=100
-**你**: 好的，我已经记录了：
-- 截面积 A = 10 in²
-- 惯性矩 I = 100 in⁴
+**User**: A=10, I=100
+**You**: Okay, I've recorded:
+- Cross-sectional area A = 10 in²
+- Moment of inertia I = 100 in⁴
 
-还需要以下参数：
-- c（截面中心到边缘距离）- 通常在2-10 in之间
-- L（柱长度）- 例如120 in（10英尺）
-- fy（屈服强度）- 常用值为50 ksi（A992钢）
-- delta_o（初始缺陷）- 通常取0.1 in
+Still need the following parameters:
+- c (distance from section center to edge) - typically between 2-10 in
+- L (column length) - for example, 120 in (10 feet)
+- fy (yield strength) - common value is 50 ksi (A992 steel)
+- delta_o (initial imperfection) - typically 0.1 in
 
-请继续提供这些参数。
+Please continue to provide these parameters.
 
-记住：你的目标是帮助用户完成钢结构设计，同时保持对话的自然和友好。"""
+Remember: Your goal is to help users complete steel structure design while keeping the conversation natural and friendly."""
     
     def chat(self, user_message: str) -> str:
         """
-        与Agent对话
+        Chat with Agent
         
         Args:
-            user_message: 用户消息
+            user_message: User message
         
         Returns:
-            Agent回复
+            Agent response
         """
         if not self.client:
-            return "错误: OpenAI API未配置，请设置OPENAI_API_KEY环境变量"
+            return "Error: OpenAI API not configured. Please set OPENAI_API_KEY environment variable"
         
-        # 添加用户消息到历史
+        # Add user message to history
         self.conversation_history.append({
             "role": "user",
             "content": user_message
         })
         
-        # 构建消息列表
+        # Build message list
         messages = [
             {"role": "system", "content": self.system_prompt}
         ] + self.conversation_history
         
         try:
-            # 调用LLM API（兼容OpenAI和阿里云DashScope）
+            # Call LLM API (compatible with OpenAI and Alibaba Cloud DashScope)
             response = self.client.chat.completions.create(
                 model=self.model_name,
                 messages=messages,
@@ -181,9 +181,9 @@ class SteelDesignAgent:
             response_message = response.choices[0].message
             tool_calls = response_message.tool_calls
             
-            # 如果需要调用工具
+            # If tool call is needed
             if tool_calls:
-                # 添加助手的响应到历史
+                # Add assistant response to history
                 self.conversation_history.append({
                     "role": "assistant",
                     "content": response_message.content,
@@ -199,20 +199,20 @@ class SteelDesignAgent:
                     ]
                 })
                 
-                # 执行工具调用
+                # Execute tool call
                 for tool_call in tool_calls:
                     function_name = tool_call.function.name
                     function_args = json.loads(tool_call.function.arguments)
                     
-                    # 调用相应的工具
+                    # Call corresponding tool
                     if function_name == "calculate_column_strength":
                         function_response = self.calculator.calculate_column_strength(function_args)
                     elif function_name == "calculate_beam_strength":
                         function_response = self.calculator.calculate_beam_strength(function_args)
                     else:
-                        function_response = {"error": "未知的工具"}
+                        function_response = {"error": "Unknown tool"}
                     
-                    # 添加工具响应到历史
+                    # Add tool response to history
                     self.conversation_history.append({
                         "role": "tool",
                         "tool_call_id": tool_call.id,
@@ -220,7 +220,7 @@ class SteelDesignAgent:
                         "content": json.dumps(function_response, ensure_ascii=False)
                     })
                 
-                # 再次调用API获取最终响应
+                # Call API again to get final response
                 second_response = self.client.chat.completions.create(
                     model=self.model_name,
                     messages=[
@@ -237,7 +237,7 @@ class SteelDesignAgent:
                 return final_message
             
             else:
-                # 没有工具调用，直接返回响应
+                # No tool call, return response directly
                 assistant_message = response_message.content
                 self.conversation_history.append({
                     "role": "assistant",
@@ -247,88 +247,87 @@ class SteelDesignAgent:
                 return assistant_message
         
         except Exception as e:
-            error_msg = f"发生错误: {str(e)}"
+            error_msg = f"Error occurred: {str(e)}"
             print(error_msg)
             return error_msg
     
     def reset_conversation(self):
-        """重置对话历史"""
+        """Reset conversation history"""
         self.conversation_history = []
     
     def get_conversation_history(self) -> List[Dict[str, Any]]:
-        """获取对话历史"""
+        """Get conversation history"""
         return self.conversation_history
     
     def load_model(self, model_path: str):
         """
-        加载PINN模型
+        Load PINN model
         
         Args:
-            model_path: 模型路径
+            model_path: Model path
         """
         self.calculator = SteelStrengthCalculator(model_path=model_path)
-        print(f"模型已加载: {model_path}")
+        print(f"Model loaded: {model_path}")
 
 
 def main():
-    """主函数 - 命令行交互界面"""
+    """Main function - Command line interactive interface"""
     print("=" * 60)
-    print("钢结构设计LLM Agent")
+    print("Steel Structure Design LLM Agent")
     print("=" * 60)
     print()
     
-    # 检查模型路径
+    # Check model path
     default_model_path = "PINN model/normal/model_20250123_165719.pth"
     if os.path.exists(default_model_path):
         model_path = default_model_path
-        print(f"✓ 找到预训练模型: {model_path}")
+        print(f"✓ Found pre-trained model: {model_path}")
     else:
         model_path = None
-        print("⚠ 未找到预训练模型，部分功能将不可用")
+        print("⚠ Pre-trained model not found, some features will be unavailable")
     
-    # 初始化Agent
+    # Initialize Agent
     agent = SteelDesignAgent(model_path=model_path)
     
     print()
-    print("Agent已启动！输入 'quit' 或 'exit' 退出")
-    print("输入 'reset' 重置对话")
-    print("输入 'help' 查看帮助")
+    print("Agent started! Enter 'quit' or 'exit' to exit")
+    print("Enter 'reset' to reset conversation")
+    print("Enter 'help' to view help")
     print("-" * 60)
     print()
     
     while True:
         try:
-            user_input = input("用户: ").strip()
+            user_input = input("User: ").strip()
             
             if not user_input:
                 continue
             
-            if user_input.lower() in ['quit', 'exit', '退出']:
-                print("再见！")
+            if user_input.lower() in ['quit', 'exit']:
+                print("Goodbye!")
                 break
             
-            if user_input.lower() in ['reset', '重置']:
+            if user_input.lower() == 'reset':
                 agent.reset_conversation()
-                print("对话已重置")
+                print("Conversation reset")
                 continue
             
-            if user_input.lower() in ['help', '帮助']:
+            if user_input.lower() == 'help':
                 print(agent.calculator.get_tool_description())
                 continue
             
-            # 获取Agent响应
+            # Get Agent response
             response = agent.chat(user_input)
             print(f"\nAgent: {response}\n")
             print("-" * 60)
             print()
         
         except KeyboardInterrupt:
-            print("\n\n再见！")
+            print("\n\nGoodbye!")
             break
         except Exception as e:
-            print(f"\n错误: {str(e)}\n")
+            print(f"\nError: {str(e)}\n")
 
 
 if __name__ == "__main__":
     main()
-

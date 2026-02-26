@@ -1,54 +1,69 @@
-# 测试套件
+# Test Suite
 
-本目录包含完整的测试套件，用于验证LLM Agent框架的所有功能。
+This directory contains a complete test suite for verifying all functionalities of the LLM Agent framework.
 
-## 测试文件
+## Test Files
 
 ### 1. test_pinn_model.py
-测试PINN模型推理功能
-- Perry-Robertson公式计算
-- 模型加载
-- 预测功能
-- 批量预测
-- 边界条件测试
+Test PINN model inference functionality
+- Perry-Robertson formula calculation
+- Model loading
+- Prediction functionality
+- Batch prediction
+- Boundary condition testing
 
 ### 2. test_steel_tools.py
-测试钢构件强度计算工具
-- 参数解析（多种格式）
-- 参数验证
-- 钢柱强度计算
-- 不同参数影响测试
+Test steel component strength calculation tools
+- Parameter parsing (multiple formats)
+- Parameter validation
+- Steel column strength calculation
+- Different parameter effect testing
 
 ### 3. test_llm_agent.py
-测试LLM Agent功能
-- Agent初始化
-- 配置管理
-- 对话历史管理
-- 工具集成
-- 工具定义验证
+Test LLM Agent functionality
+- Agent initialization
+- Configuration management
+- Conversation history management
+- Tool integration
+- Tool definition validation
 
 ### 4. test_integration.py
-集成测试
-- 端到端工作流程
-- 多场景设计
-- 参数化研究
-- 真实世界场景
-- 错误处理链
+Integration testing
+- End-to-end workflow
+- Multi-scenario design
+- Parametric studies
+- Real-world scenarios
+- Error handling chain
 
 ### 5. test_agent.py
-功能测试（原有测试）
-- 基础功能验证
-- 快速测试
+Functional testing (original tests)
+- Basic functionality verification
+- Quick testing
 
-## 运行测试
+### 6. test_conversation_features.py
+Conversation feature testing
+- Conversation history recording
+- Conversation reset
+- System prompt validation
+- Enhanced prompt content
 
-### 运行所有测试
+### 7. test_multi_turn_dialogue.py
+Multi-turn dialogue testing
+- Gradually providing parameters
+- Handling unrelated questions
+- Proactively asking for missing parameters
+- Context memory capability
+- Mixed dialogue
+
+## Running Tests
+
+### Run All Tests
 ```bash
 cd tests
 pytest -v
 ```
 
-### 运行特定测试文件
+### Run Specific Test File
 ```bash
 pytest test_pinn_model.py -v
 pytest test_steel_tools.py -v
@@ -56,54 +71,58 @@ pytest test_llm_agent.py -v
 pytest test_integration.py -v
 ```
 
-### 运行特定测试类
+### Run Specific Test Class
 ```bash
 pytest test_pinn_model.py::TestPINNPredictor -v
 ```
 
-### 运行特定测试方法
+### Run Specific Test Method
 ```bash
 pytest test_pinn_model.py::TestPINNPredictor::test_perry_robertson_formula -v
 ```
 
-### 显示详细输出
+### Show Detailed Output
 ```bash
 pytest -v -s
 ```
 
-### 生成测试报告
+### Generate Test Report
 ```bash
 pytest --html=report.html --self-contained-html
 ```
 
-### 测试覆盖率
+### Test Coverage
 ```bash
 pytest --cov=agent --cov-report=html
 ```
 
-## 测试统计
+## Test Statistics
 
-- **总测试数**: 50+
-- **测试文件**: 5个
-- **测试类**: 8个
-- **覆盖率**: ~85%
+- **Total Tests**: 50+
+- **Test Files**: 9
+- **Test Classes**: 10+
+- **Coverage**: ~85%
 
-## 测试分类
+## Test Categories
 
-### 单元测试
+### Unit Tests
 - test_pinn_model.py
 - test_steel_tools.py
 - test_llm_agent.py
+- test_conversation_features.py
 
-### 集成测试
+### Integration Tests
 - test_integration.py
 
-### 功能测试
+### Functional Tests
 - test_agent.py
 
-## 注意事项
+### Dialogue Tests
+- test_multi_turn_dialogue.py
 
-1. 某些测试需要预训练模型文件存在
-2. LLM对话测试需要API密钥配置
-3. 集成测试可能需要较长时间运行
+## Notes
 
+1. Some tests require the pre-trained model file to exist
+2. LLM dialogue tests require API key configuration
+3. Integration tests may take longer to run
+4. Multi-turn dialogue tests require LLM API access

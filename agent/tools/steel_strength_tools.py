@@ -1,6 +1,6 @@
 """
-钢构件强度计算工具
-为LLM Agent提供的工具函数
+Steel Component Strength Calculation Tools
+Tool functions provided for LLM Agent
 """
 
 import sys
@@ -13,11 +13,11 @@ import json
 
 
 class SteelStrengthCalculator:
-    """钢构件强度计算器工具类"""
+    """Steel Component Strength Calculator Tool Class"""
     
     def __init__(self, model_path: str = None):
         """
-        初始化计算器
+        Initialize calculator
         
         Args:
             model_path: PINN模型路径
@@ -27,21 +27,21 @@ class SteelStrengthCalculator:
     
     def calculate_column_strength(self, params: Dict[str, Any]) -> Dict[str, Any]:
         """
-        计算钢柱抗压强度
+        Calculate steel column compressive strength
         
         Args:
-            params: 钢柱参数字典
+            params: Steel column parameter dictionary
         
         Returns:
-            计算结果
+            Calculation result
         """
         if not self.model_loaded:
             return {
                 'success': False,
-                'error': '模型未加载，请先加载PINN模型'
+                'error': '模型Not loaded，请先加载PINN模型'
             }
         
-        # 参数映射和单位转换
+        # Parameter mapping and unit conversion
         input_params = self._parse_column_params(params)
         
         if 'error' in input_params:
@@ -50,7 +50,7 @@ class SteelStrengthCalculator:
                 'error': input_params['error']
             }
         
-        # 调用PINN模型预测
+        # Call PINN model for prediction
         result = self.predictor.predict(input_params)
         
         if result['status'] == 'success':
@@ -62,7 +62,7 @@ class SteelStrengthCalculator:
                 'prediction_ratio': result['ratio'],
                 'unit': 'kip',
                 'input_parameters': input_params,
-                'message': '钢柱强度计算成功'
+                'message': '钢柱强度CalculateSuccess'
             }
         else:
             return {
@@ -72,38 +72,38 @@ class SteelStrengthCalculator:
     
     def calculate_beam_strength(self, params: Dict[str, Any]) -> Dict[str, Any]:
         """
-        计算钢梁抗弯强度（预留接口）
+        Calculate steel beam flexural strength（Reserved interface）
         
         Args:
-            params: 钢梁参数字典
+            params: Steel beam parameter dictionary
         
         Returns:
-            计算结果
+            Calculation result
         """
         return {
             'success': False,
-            'error': '钢梁强度计算功能正在开发中，敬请期待'
+            'error': '钢梁强度Calculate功能正在开发中，Stay tuned'
         }
     
     def _parse_column_params(self, params: Dict[str, Any]) -> Dict[str, float]:
         """
-        解析和验证钢柱参数
+        Parse and validate steel column parameters
         
         Args:
-            params: 原始参数字典
+            params: Original parameter dictionary
         
         Returns:
-            标准化的参数字典
+            Standardized parameter dictionary
         """
         try:
-            # 必需参数
+            # Required parameters
             required_params = {
-                'A': ['A', 'area', '截面积', 'cross_sectional_area'],
-                'I': ['I', 'inertia', '惯性矩', 'moment_of_inertia'],
-                'c': ['c', 'distance', '距离', 'distance_to_edge'],
-                'L': ['L', 'length', '长度', 'column_length'],
-                'fy': ['fy', 'yield_strength', '屈服强度', 'yield_stress'],
-                'delta_o': ['delta_o', 'delta', 'imperfection', '初始缺陷', 'initial_imperfection']
+                'A': ['A', 'area', 'Cross-sectional area', 'cross_sectional_area'],
+                'I': ['I', 'inertia', 'Moment of inertia', 'moment_of_inertia'],
+                'c': ['c', 'distance', 'Distance', 'distance_to_edge'],
+                'L': ['L', 'length', 'Length', 'column_length'],
+                'fy': ['fy', 'yield_strength', 'Yield strength', 'yield_stress'],
+                'delta_o': ['delta_o', 'delta', 'imperfection', 'Initial imperfection', 'initial_imperfection']
             }
             
             parsed = {}
@@ -116,50 +116,50 @@ class SteelStrengthCalculator:
                         break
                 
                 if value is None:
-                    return {'error': f'缺少必要参数: {standard_key} (可用键名: {", ".join(possible_keys)})'}
+                    return {'error': f'Missing required parameter: {standard_key} (Available key names: {", ".join(possible_keys)})'}
                 
                 parsed[standard_key] = value
             
-            # 参数验证
+            # Parameter validation
             if parsed['A'] <= 0:
-                return {'error': '截面积必须大于0'}
+                return {'error': 'Cross-sectional areamust be greater than0'}
             if parsed['I'] <= 0:
-                return {'error': '惯性矩必须大于0'}
+                return {'error': 'Moment of inertiamust be greater than0'}
             if parsed['L'] <= 0:
-                return {'error': '柱长度必须大于0'}
+                return {'error': '柱Lengthmust be greater than0'}
             if parsed['fy'] <= 0:
-                return {'error': '屈服强度必须大于0'}
+                return {'error': 'Yield strengthmust be greater than0'}
             
             return parsed
             
         except ValueError as e:
-            return {'error': f'参数类型错误: {str(e)}'}
+            return {'error': f'Parameter type error: {str(e)}'}
         except Exception as e:
-            return {'error': f'参数解析失败: {str(e)}'}
+            return {'error': f'Parameter parsing failed: {str(e)}'}
     
     def get_tool_description(self) -> str:
-        """获取工具描述（供LLM理解）"""
+        """Get tool description（For LLM understanding）"""
         return """
-钢构件强度计算工具
+Steel Component Strength Calculation Tools
 
 功能:
-1. 计算钢柱抗压强度 (calculate_column_strength)
-2. 计算钢梁抗弯强度 (calculate_beam_strength) - 开发中
+1. Calculate steel column compressive strength (calculate_column_strength)
+2. Calculate steel beam flexural strength (calculate_beam_strength) - 开发中
 
-钢柱参数说明:
-- A (area): 截面积，单位 in²
-- I (inertia): 惯性矩，单位 in⁴
-- c (distance): 截面中心到边缘距离，单位 in
-- L (length): 柱长度，单位 in
-- fy (yield_strength): 屈服强度，单位 ksi
-- delta_o (imperfection): 初始缺陷，单位 in
+Steel column parameter description:
+- A (area): Cross-sectional area，Unit in²
+- I (inertia): Moment of inertia，Unit in⁴
+- c (distance): 截面中心到边缘Distance，Unit in
+- L (length): 柱Length，Unit in
+- fy (yield_strength): Yield strength，Unit ksi
+- delta_o (imperfection): Initial imperfection，Unit in
 
-返回结果:
-- nominal_strength_Pn: 名义抗压强度，单位 kip
-- theoretical_strength: 理论强度（Perry-Robertson公式），单位 kip
-- prediction_ratio: 预测值与理论值的比值
+Return result:
+- nominal_strength_Pn: Nominal compressive strength，Unit kip
+- theoretical_strength: Theoretical strength（Perry-Robertson公式），Unit kip
+- prediction_ratio: Ratio of predicted to theoretical value
 
-示例调用:
+Example call:
 {
     "A": 10.0,
     "I": 100.0,
@@ -177,33 +177,33 @@ STEEL_STRENGTH_TOOLS = [
         "type": "function",
         "function": {
             "name": "calculate_column_strength",
-            "description": "计算钢柱的抗压强度。使用预训练的PINN（物理信息神经网络）模型进行预测。",
+            "description": "Calculate钢柱的抗压强度。使用预训练的PINN（物理信息神经网络）模型进行预测。",
             "parameters": {
                 "type": "object",
                 "properties": {
                     "A": {
                         "type": "number",
-                        "description": "截面积，单位: in²（平方英寸）"
+                        "description": "Cross-sectional area，Unit: in²（square inches）"
                     },
                     "I": {
                         "type": "number",
-                        "description": "惯性矩，单位: in⁴（四次方英寸）"
+                        "description": "Moment of inertia，Unit: in⁴（to the fourth power inches）"
                     },
                     "c": {
                         "type": "number",
-                        "description": "截面中心到边缘的距离，单位: in（英寸）"
+                        "description": "截面中心到边缘的Distance，Unit: in（inches）"
                     },
                     "L": {
                         "type": "number",
-                        "description": "柱长度，单位: in（英寸）"
+                        "description": "柱Length，Unit: in（inches）"
                     },
                     "fy": {
                         "type": "number",
-                        "description": "屈服强度，单位: ksi（千磅每平方英寸）"
+                        "description": "Yield strength，Unit: ksi（千磅每square inches）"
                     },
                     "delta_o": {
                         "type": "number",
-                        "description": "初始缺陷，单位: in（英寸）"
+                        "description": "Initial imperfection，Unit: in（inches）"
                     }
                 },
                 "required": ["A", "I", "c", "L", "fy", "delta_o"]
@@ -214,7 +214,7 @@ STEEL_STRENGTH_TOOLS = [
         "type": "function",
         "function": {
             "name": "calculate_beam_strength",
-            "description": "计算钢梁的抗弯强度（功能开发中）",
+            "description": "Calculate钢梁的抗弯强度（Feature under development）",
             "parameters": {
                 "type": "object",
                 "properties": {
@@ -231,10 +231,10 @@ STEEL_STRENGTH_TOOLS = [
 
 
 if __name__ == "__main__":
-    # 测试工具
+    # Test tool
     calculator = SteelStrengthCalculator()
     
-    # 测试钢柱计算
+    # 测试钢柱Calculate
     test_params = {
         'A': 10.0,
         'I': 100.0,
@@ -245,6 +245,6 @@ if __name__ == "__main__":
     }
     
     result = calculator.calculate_column_strength(test_params)
-    print("钢柱强度计算结果:")
+    print("钢柱强度Calculation result:")
     print(json.dumps(result, indent=2, ensure_ascii=False))
 

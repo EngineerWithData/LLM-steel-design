@@ -60,7 +60,7 @@ def create_scalers_from_data(data_path: str, output_path: str):
             'SHIFT': SHIFT
         }, f)
     
-    print("✓ 标准化器创建成功")
+    print("✓ 标准化器创建Success")
     print(f"\nX标准化参数:")
     print(f"  均值: {scaler_x.mean_}")
     print(f"  标准差: {scaler_x.scale_}")
@@ -71,14 +71,14 @@ def create_scalers_from_data(data_path: str, output_path: str):
 
 def create_default_scalers(output_path: str):
     """
-    创建默认的标准化器（基于典型参数范围）
+    创建默认的标准化器（基于典型Parameter range）
     
     Args:
         output_path: 标准化器保存路径
     """
     print("创建默认标准化器...")
     
-    # 典型参数范围的中心值和标准差
+    # 典型Parameter range的中心值和标准差
     # 这些值是基于常见钢柱设计参数估计的
     X_mean = np.array([15.0, 200.0, 5.0, 150.0, 50.0, 0.2])
     X_std = np.array([10.0, 150.0, 3.0, 80.0, 15.0, 0.15])

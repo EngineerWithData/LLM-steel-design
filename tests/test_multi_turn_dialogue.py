@@ -22,21 +22,21 @@ def test_multi_turn_conversation():
     )
     
     if not os.path.exists(model_path):
-        print("⚠ 模型文件不存在，跳过此测试")
+        print("⚠ Model file does not exist，Skip this test")
         return
     
     agent = SteelDesignAgent(model_path=model_path)
     
     if not agent.client:
-        print("⚠ LLM客户端未初始化，跳过此测试")
+        print("⚠ LLM客户端Not initialized，Skip this test")
         return
     
     # 模拟多轮对话
     conversations = [
-        "你好，我想计算钢柱强度",
-        "截面积是10平方英寸，惯性矩是100",
-        "c是5英寸，长度120英寸",
-        "屈服强度50ksi，初始缺陷0.1英寸",
+        "你好，我想Calculate钢柱强度",
+        "Cross-sectional area是10square inches，Moment of inertia是100",
+        "c是5inches，Length120inches",
+        "Yield strength50ksi，Initial imperfection0.1inches",
     ]
     
     print("\n开始多轮对话测试:\n")
@@ -65,13 +65,13 @@ def test_unrelated_questions():
     )
     
     if not os.path.exists(model_path):
-        print("⚠ 模型文件不存在，跳过此测试")
+        print("⚠ Model file does not exist，Skip this test")
         return
     
     agent = SteelDesignAgent(model_path=model_path)
     
     if not agent.client:
-        print("⚠ LLM客户端未初始化，跳过此测试")
+        print("⚠ LLM客户端Not initialized，Skip this test")
         return
     
     # 测试各种类型的问题
@@ -79,7 +79,7 @@ def test_unrelated_questions():
         "你好，你是谁？",
         "今天天气怎么样？",
         "你能帮我做数学题吗？",
-        "回到正题，我需要计算钢柱强度",
+        "回到正题，我需要Calculate钢柱强度",
     ]
     
     print("\n开始无关问题测试:\n")
@@ -106,18 +106,18 @@ def test_incomplete_parameters():
     )
     
     if not os.path.exists(model_path):
-        print("⚠ 模型文件不存在，跳过此测试")
+        print("⚠ Model file does not exist，Skip this test")
         return
     
     agent = SteelDesignAgent(model_path=model_path)
     
     if not agent.client:
-        print("⚠ LLM客户端未初始化，跳过此测试")
+        print("⚠ LLM客户端Not initialized，Skip this test")
         return
     
     # 测试参数逐步补充
     conversations = [
-        "计算钢柱强度，A=10",
+        "Calculate钢柱强度，A=10",
         "I=100, c=5",
         "还需要什么参数？",
         "L=120, fy=50, delta_o=0.1",
@@ -148,20 +148,20 @@ def test_context_memory():
     )
     
     if not os.path.exists(model_path):
-        print("⚠ 模型文件不存在，跳过此测试")
+        print("⚠ Model file does not exist，Skip this test")
         return
     
     agent = SteelDesignAgent(model_path=model_path)
     
     if not agent.client:
-        print("⚠ LLM客户端未初始化，跳过此测试")
+        print("⚠ LLM客户端Not initialized，Skip this test")
         return
     
-    # 测试Agent是否记住之前的信息
+    # Test Agent是否记住之前的信息
     conversations = [
-        "我有一个钢柱，截面积10平方英寸",
-        "惯性矩是100",
-        "你记得我刚才说的截面积是多少吗？",
+        "我有一个钢柱，Cross-sectional area10square inches",
+        "Moment of inertia是100",
+        "你记得我刚才说的Cross-sectional area是多少吗？",
         "好的，继续。c=5, L=120, fy=50, delta_o=0.1",
     ]
     
@@ -190,20 +190,20 @@ def test_mixed_conversation():
     )
     
     if not os.path.exists(model_path):
-        print("⚠ 模型文件不存在，跳过此测试")
+        print("⚠ Model file does not exist，Skip this test")
         return
     
     agent = SteelDesignAgent(model_path=model_path)
     
     if not agent.client:
-        print("⚠ LLM客户端未初始化，跳过此测试")
+        print("⚠ LLM客户端Not initialized，Skip this test")
         return
     
     # 混合专业和闲聊
     conversations = [
         "你好！",
         "我需要设计一个钢柱",
-        "等等，你能解释一下什么是惯性矩吗？",
+        "等等，你能解释一下什么是Moment of inertia吗？",
         "明白了。那我的参数是：A=10, I=100, c=5, L=120, fy=50, delta_o=0.1",
         "谢谢！这个结果可靠吗？",
     ]
@@ -256,7 +256,7 @@ def main():
     except KeyboardInterrupt:
         print("\n\n测试已中断")
     except Exception as e:
-        print(f"\n✗ 测试过程中出现错误: {e}")
+        print(f"\n✗ Error occurred during testing: {e}")
         import traceback
         traceback.print_exc()
 

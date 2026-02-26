@@ -23,7 +23,7 @@ class TestIntegration:
             "PINN model/normal/model_20250123_165719.pth"
         )
         if not os.path.exists(path):
-            pytest.skip("模型文件不存在")
+            pytest.skip("Model file does not exist")
         return path
     
     def test_end_to_end_column_design(self, model_path):
@@ -41,7 +41,7 @@ class TestIntegration:
             'delta_o': 0.1
         }
         
-        # 3. 使用计算器计算
+        # 3. 使用Calculate器Calculate
         result = agent.calculator.calculate_column_strength(params)
         
         # 4. 验证结果
@@ -54,36 +54,36 @@ class TestIntegration:
         """测试多个设计场景"""
         calculator = SteelStrengthCalculator(model_path=model_path)
         
-        # 场景1: 短柱
+        # 场景1: Short column
         short_column = {
             'A': 15.0, 'I': 150.0, 'c': 6.0,
             'L': 100.0, 'fy': 50.0, 'delta_o': 0.1
         }
         
-        # 场景2: 中等柱
+        # 场景2: Medium column
         medium_column = {
             'A': 10.0, 'I': 100.0, 'c': 5.0,
             'L': 150.0, 'fy': 50.0, 'delta_o': 0.1
         }
         
-        # 场景3: 长柱
+        # 场景3: Long column
         long_column = {
             'A': 8.0, 'I': 80.0, 'c': 4.0,
             'L': 200.0, 'fy': 50.0, 'delta_o': 0.1
         }
         
-        # 计算所有场景
+        # Calculate所有场景
         results = []
         for params in [short_column, medium_column, long_column]:
             result = calculator.calculate_column_strength(params)
             assert result['success'] == True
             results.append(result['nominal_strength_Pn'])
         
-        # 验证趋势：短柱 > 中等柱 > 长柱
+        # 验证趋势：Short column > Medium column > Long column
         assert results[0] > results[1] > results[2]
     
     def test_parametric_study_length(self, model_path):
-        """测试参数化研究：长度影响"""
+        """测试参数化研究：Length影响"""
         calculator = SteelStrengthCalculator(model_path=model_path)
         
         base_params = {
@@ -102,13 +102,13 @@ class TestIntegration:
             if result['success']:
                 strengths.append(result['nominal_strength_Pn'])
         
-        # 验证强度随长度增加而单调递减
+        # 验证强度随Length增加而单调递减
         assert len(strengths) == len(lengths)
         for i in range(len(strengths) - 1):
             assert strengths[i] > strengths[i + 1], f"强度应该递减: {strengths[i]} > {strengths[i+1]}"
     
     def test_parametric_study_yield_strength(self, model_path):
-        """测试参数化研究：屈服强度影响"""
+        """测试参数化研究：Yield strength影响"""
         calculator = SteelStrengthCalculator(model_path=model_path)
         
         base_params = {
@@ -127,7 +127,7 @@ class TestIntegration:
             if result['success']:
                 strengths.append(result['nominal_strength_Pn'])
         
-        # 验证强度随屈服强度增加而单调递增
+        # 验证强度随Yield strength增加而单调递增
         assert len(strengths) == len(fy_values)
         for i in range(len(strengths) - 1):
             assert strengths[i] < strengths[i + 1], f"强度应该递增: {strengths[i]} < {strengths[i+1]}"
@@ -151,9 +151,9 @@ class TestIntegration:
             assert result['nominal_strength_Pn'] > 0
             assert result['theoretical_strength'] > 0
             
-            # 比值应该在合理范围内（0.5 - 2.0）
+            # Ratio应该在合理范围内（0.5 - 2.0）
             ratio = result['prediction_ratio']
-            assert 0.5 < ratio < 2.0, f"比值应该在合理范围: {ratio}"
+            assert 0.5 < ratio < 2.0, f"Ratio应该在合理范围: {ratio}"
     
     def test_model_predictor_integration(self, model_path):
         """测试模型预测器集成"""
@@ -174,8 +174,8 @@ class TestIntegration:
         assert result['Pn_theory'] > 0
     
     def test_error_handling_chain(self):
-        """测试错误处理链"""
-        calculator = SteelStrengthCalculator()  # 不加载模型
+        """测试Error处理链"""
+        calculator = SteelStrengthCalculator()  # Do not load model
         
         # 测试1: 没有模型
         result = calculator.calculate_column_strength({
@@ -184,7 +184,7 @@ class TestIntegration:
         })
         assert result['success'] == False
         
-        # 测试2: 缺少参数
+        # 测试2: Missing parameters
         result = calculator.calculate_column_strength({
             'A': 10.0, 'I': 100.0
         })
@@ -209,7 +209,7 @@ class TestRealWorldScenarios:
             "PINN model/normal/model_20250123_165719.pth"
         )
         if not os.path.exists(path):
-            pytest.skip("模型文件不存在")
+            pytest.skip("Model file does not exist")
         return path
     
     def test_w_section_column(self, model_path):
@@ -232,7 +232,7 @@ class TestRealWorldScenarios:
         assert result['nominal_strength_Pn'] > 0
         
         # 粗略验证：强度应该在合理范围内
-        # W8x31的理论强度大约在200-500 kip范围
+        # W8x31的Theoretical strength大约在200-500 kip范围
         assert 100 < result['nominal_strength_Pn'] < 1000
     
     def test_different_steel_grades(self, model_path):
@@ -269,17 +269,17 @@ class TestRealWorldScenarios:
         """测试细长比效应"""
         calculator = SteelStrengthCalculator(model_path=model_path)
         
-        # 固定截面，改变长度
+        # 固定截面，改变Length
         base_params = {
             'A': 10.0, 'I': 100.0, 'c': 5.0,
             'fy': 50.0, 'delta_o': 0.1
         }
         
-        # 短柱、中等柱、长柱
+        # Short column、Medium column、Long column
         lengths = {
-            '短柱': 60.0,
-            '中等柱': 120.0,
-            '长柱': 240.0
+            'Short column': 60.0,
+            'Medium column': 120.0,
+            'Long column': 240.0
         }
         
         results = {}
@@ -292,10 +292,10 @@ class TestRealWorldScenarios:
                 results[name] = result['nominal_strength_Pn']
         
         # 验证细长比效应
-        assert results['短柱'] > results['中等柱'] > results['长柱']
+        assert results['Short column'] > results['Medium column'] > results['Long column']
         
-        # 长柱的强度应该低于短柱（放宽阈值）
-        assert results['长柱'] < results['短柱'] * 0.98
+        # Long column的强度应该低于Short column（放宽阈值）
+        assert results['Long column'] < results['Short column'] * 0.98
 
 
 if __name__ == "__main__":

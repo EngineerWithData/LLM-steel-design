@@ -1,5 +1,5 @@
 """
-简单的多轮对话功能验证
+Simple multi-turn dialogue functionality verification
 """
 
 import sys
@@ -10,80 +10,80 @@ from agent import SteelDesignAgent
 
 
 def test_conversation_history():
-    """测试对话历史功能"""
-    print("测试1: 对话历史记录")
+    """Test conversation history functionality"""
+    print("Test 1: Conversation history recording")
     print("-" * 60)
     
     agent = SteelDesignAgent()
     
-    # 添加几条消息
-    agent.conversation_history.append({"role": "user", "content": "测试1"})
-    agent.conversation_history.append({"role": "assistant", "content": "回复1"})
-    agent.conversation_history.append({"role": "user", "content": "测试2"})
+    # Add a few messages
+    agent.conversation_history.append({"role": "user", "content": "test1"})
+    agent.conversation_history.append({"role": "assistant", "content": "reply1"})
+    agent.conversation_history.append({"role": "user", "content": "test2"})
     
-    # 验证历史
+    # Verify history
     history = agent.get_conversation_history()
-    assert len(history) == 3, "对话历史应该有3条记录"
-    assert history[0]["content"] == "测试1"
-    assert history[1]["content"] == "回复1"
+    assert len(history) == 3, "Conversation history should have 3 records"
+    assert history[0]["content"] == "test1"
+    assert history[1]["content"] == "reply1"
     
-    print("✓ 对话历史记录功能正常")
+    print("✓ Conversation history recording functionality normal")
     print()
 
 
 def test_reset_conversation():
-    """测试重置对话功能"""
-    print("测试2: 重置对话")
+    """Test reset conversation functionality"""
+    print("Test 2: Reset conversation")
     print("-" * 60)
     
     agent = SteelDesignAgent()
     
-    # 添加消息
-    agent.conversation_history.append({"role": "user", "content": "测试"})
+    # Add message
+    agent.conversation_history.append({"role": "user", "content": "test"})
     assert len(agent.conversation_history) > 0
     
-    # 重置
+    # Reset
     agent.reset_conversation()
-    assert len(agent.conversation_history) == 0, "重置后对话历史应该为空"
+    assert len(agent.conversation_history) == 0, "Conversation history should be empty after reset"
     
-    print("✓ 重置对话功能正常")
+    print("✓ Reset conversation functionality normal")
     print()
 
 
 def test_system_prompt():
-    """测试系统提示词"""
-    print("测试3: 系统提示词")
+    """Test system prompt"""
+    print("Test 3: System prompt")
     print("-" * 60)
     
     agent = SteelDesignAgent()
     
-    # 验证系统提示词包含关键信息
+    # Verify system prompt contains key information
     assert agent.system_prompt is not None
     assert len(agent.system_prompt) > 0
-    assert "多轮对话" in agent.system_prompt
-    assert "参数不完整" in agent.system_prompt
-    assert "无关" in agent.system_prompt
+    assert "Multi-turn" in agent.system_prompt or "multi-turn" in agent.system_prompt
+    assert "incomplete" in agent.system_prompt or "Incomplete" in agent.system_prompt
+    assert "unrelated" in agent.system_prompt or "Unrelated" in agent.system_prompt
     
-    print("✓ 系统提示词包含多轮对话相关指令")
+    print("✓ System prompt contains multi-turn dialogue related instructions")
     print()
 
 
 def test_enhanced_prompt_content():
-    """测试增强的提示词内容"""
-    print("测试4: 增强的提示词内容")
+    """Test enhanced prompt content"""
+    print("Test 4: Enhanced prompt content")
     print("-" * 60)
     
     agent = SteelDesignAgent()
     
-    # 检查关键功能描述
+    # Check key functionality descriptions
     prompt = agent.system_prompt
     
     checks = [
-        ("上下文记忆", "上下文" in prompt or "记忆" in prompt),
-        ("参数补全", "参数" in prompt and "完整" in prompt),
-        ("无关问题处理", "无关" in prompt),
-        ("参数说明", "A" in prompt and "截面积" in prompt),
-        ("典型范围", "典型" in prompt or "范围" in prompt),
+        ("Context memory", "context" in prompt.lower() or "memory" in prompt.lower()),
+        ("Parameter completion", "parameter" in prompt.lower() and "complete" in prompt.lower()),
+        ("Unrelated question handling", "unrelated" in prompt.lower()),
+        ("Parameter description", "A" in prompt and ("Cross-sectional" in prompt or "area" in prompt)),
+        ("Typical range", "typical" in prompt.lower() or "range" in prompt.lower()),
     ]
     
     for name, result in checks:
@@ -91,17 +91,17 @@ def test_enhanced_prompt_content():
         print(f"  {status} {name}")
     
     all_passed = all(result for _, result in checks)
-    assert all_passed, "提示词应该包含所有关键功能描述"
+    assert all_passed, "Prompt should contain all key functionality descriptions"
     
-    print("\n✓ 提示词内容完整")
+    print("\n✓ Prompt content complete")
     print()
 
 
 def main():
-    """运行所有验证测试"""
+    """Run all verification tests"""
     print("\n")
     print("╔" + "═" * 58 + "╗")
-    print("║" + " " * 10 + "多轮对话功能验证" + " " * 28 + "║")
+    print("║" + " " * 10 + "Multi-turn Dialogue Verification" + " " * 14 + "║")
     print("╚" + "═" * 58 + "╝")
     print("\n")
     
@@ -112,23 +112,22 @@ def main():
         test_enhanced_prompt_content()
         
         print("=" * 60)
-        print("所有验证测试通过！")
+        print("All verification tests passed!")
         print("=" * 60)
         print()
-        print("注意: 实际的多轮对话功能需要配置LLM API才能测试")
-        print("请运行以下命令进行完整测试:")
+        print("Note: Actual multi-turn dialogue functionality requires LLM API configuration")
+        print("Please run the following commands for complete testing:")
         print("  python tests/test_multi_turn_dialogue.py")
         print("  python examples/multi_turn_demo.py")
         print()
         
     except AssertionError as e:
-        print(f"\n✗ 测试失败: {e}\n")
+        print(f"\n✗ Test failed: {e}\n")
     except Exception as e:
-        print(f"\n✗ 发生错误: {e}\n")
+        print(f"\n✗ Error occurred: {e}\n")
         import traceback
         traceback.print_exc()
 
 
 if __name__ == "__main__":
     main()
-

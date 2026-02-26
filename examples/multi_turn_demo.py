@@ -33,7 +33,7 @@ def demo_scenario_1():
     
     model_path = "PINN model/normal/model_20250123_165719.pth"
     if not os.path.exists(model_path):
-        print("⚠ 模型文件不存在")
+        print("⚠ Model file does not exist")
         return
     
     agent = SteelDesignAgent(model_path=model_path)
@@ -46,10 +46,10 @@ def demo_scenario_1():
     print("这个场景展示了Agent如何引导用户逐步提供完整的参数\n")
     
     conversations = [
-        ("用户", "你好，我想计算钢柱强度"),
-        ("用户", "截面积是10平方英寸"),
-        ("用户", "惯性矩100，c是5英寸"),
-        ("用户", "长度120英寸，屈服强度50ksi，初始缺陷0.1英寸"),
+        ("用户", "你好，我想Calculate钢柱强度"),
+        ("用户", "Cross-sectional area是10square inches"),
+        ("用户", "Moment of inertia100，c是5inches"),
+        ("用户", "Length120inches，Yield strength50ksi，Initial imperfection0.1inches"),
     ]
     
     for role, message in conversations:
@@ -70,7 +70,7 @@ def demo_scenario_2():
     
     model_path = "PINN model/normal/model_20250123_165719.pth"
     if not os.path.exists(model_path):
-        print("⚠ 模型文件不存在")
+        print("⚠ Model file does not exist")
         return
     
     agent = SteelDesignAgent(model_path=model_path)
@@ -84,7 +84,7 @@ def demo_scenario_2():
     conversations = [
         ("用户", "你好，你是谁？"),
         ("用户", "今天天气怎么样？"),
-        ("用户", "好的，回到正题。我需要计算钢柱强度"),
+        ("用户", "好的，回到正题。我需要Calculate钢柱强度"),
         ("用户", "A=10, I=100, c=5, L=120, fy=50, delta_o=0.1"),
     ]
     
@@ -106,7 +106,7 @@ def demo_scenario_3():
     
     model_path = "PINN model/normal/model_20250123_165719.pth"
     if not os.path.exists(model_path):
-        print("⚠ 模型文件不存在")
+        print("⚠ Model file does not exist")
         return
     
     agent = SteelDesignAgent(model_path=model_path)
@@ -118,7 +118,7 @@ def demo_scenario_3():
     print("这个场景展示了Agent如何识别缺失的参数并主动询问\n")
     
     conversations = [
-        ("用户", "计算钢柱强度：A=10, I=100"),
+        ("用户", "Calculate钢柱强度：A=10, I=100"),
         ("用户", "还需要什么参数？"),
         ("用户", "c=5, L=120"),
         ("用户", "fy=50, delta_o=0.1"),
@@ -142,7 +142,7 @@ def demo_scenario_4():
     
     model_path = "PINN model/normal/model_20250123_165719.pth"
     if not os.path.exists(model_path):
-        print("⚠ 模型文件不存在")
+        print("⚠ Model file does not exist")
         return
     
     agent = SteelDesignAgent(model_path=model_path)
@@ -154,8 +154,8 @@ def demo_scenario_4():
     print("这个场景展示了Agent如何记住之前对话中的信息\n")
     
     conversations = [
-        ("用户", "我有一个W8x31的钢柱，截面积9.13平方英寸"),
-        ("用户", "你记得我刚才说的截面积是多少吗？"),
+        ("用户", "我有一个W8x31的钢柱，Cross-sectional area9.13square inches"),
+        ("用户", "你记得我刚才说的Cross-sectional area是多少吗？"),
         ("用户", "好的，继续。I=110, c=4, L=120, fy=50, delta_o=0.1"),
     ]
     
@@ -177,7 +177,7 @@ def interactive_demo():
     
     model_path = "PINN model/normal/model_20250123_165719.pth"
     if not os.path.exists(model_path):
-        print("⚠ 模型文件不存在")
+        print("⚠ Model file does not exist")
         return
     
     agent = SteelDesignAgent(model_path=model_path)

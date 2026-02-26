@@ -1,6 +1,6 @@
 """
-PINN模型推理模块
-用于加载预训练的PINN模型并进行钢构件强度预测
+PINN Model Inference Module
+For loading pre-trained PINN models and predicting steel component strength
 """
 
 import torch
@@ -12,7 +12,7 @@ from typing import Dict, Union, Tuple
 
 
 class PINN(nn.Module):
-    """物理信息神经网络模型"""
+    """Physics-Informed Neural Network Model"""
     
     def __init__(self, in_dim: int, h_dim: int, out_dim: int):
         super(PINN, self).__init__()
@@ -48,7 +48,7 @@ class PINN(nn.Module):
 
 
 class StandardScaler:
-    """标准化缩放器"""
+    """Standard Scaler"""
     
     def __init__(self):
         self.mean_ = None
@@ -67,23 +67,23 @@ class StandardScaler:
 
 
 class PINNPredictor:
-    """PINN模型预测器"""
+    """PINN Model Predictor"""
     
     def __init__(self, model_path: str = None, scaler_path: str = None):
         """
-        初始化PINN预测器
+        Initialize PINN Predictor
         
         Args:
-            model_path: 预训练模型路径
-            scaler_path: 标准化器路径
+            model_path: Pre-trained model path
+            scaler_path: Scaler path
         """
         self.device = torch.device('cuda' if torch.cuda.is_available() else 'cpu')
         self.model = None
         self.scaler_x = None
         self.scaler_y = None
-        self.SHIFT = 0.01  # 对数变换的偏移量
+        self.SHIFT = 0.01  # Logarithmic transformation offset
         
-        # 特征名称
+        # Feature names
         self.feature_names = ['A', 'I', 'c', 'L', 'fy', 'delta_o']
         
         if model_path:
@@ -91,25 +91,25 @@ class PINNPredictor:
     
     def load_model(self, model_path: str, scaler_path: str = None):
         """
-        加载预训练模型和标准化器
+        Load pre-trained model and scaler
         
         Args:
-            model_path: 模型文件路径
-            scaler_path: 标准化器文件路径
+            model_path: Model file path
+            scaler_path: Scaler file path
         """
-        # 加载模型
+        # Load model
         self.model = PINN(in_dim=6, h_dim=64, out_dim=1)
         self.model.load_state_dict(torch.load(model_path, map_location=self.device))
         self.model.to(self.device)
         self.model.eval()
         
-        # 自动查找标准化器
+        # Automatically find scaler
         if scaler_path is None:
-            # 尝试在模型同目录下查找scalers.pkl
+            # Try to find scalers.pkl in the same directory as the model
             model_dir = os.path.dirname(model_path)
             scaler_path = os.path.join(model_dir, 'scalers.pkl')
         
-        # 加载或初始化标准化器
+        # Load or initialize scaler
         if scaler_path and os.path.exists(scaler_path):
             with open(scaler_path, 'rb') as f:
                 scalers = pickle.load(f)
@@ -117,59 +117,59 @@ class PINNPredictor:
                 self.scaler_y = scalers['scaler_y']
                 if 'SHIFT' in scalers:
                     self.SHIFT = scalers['SHIFT']
-            print(f"✓ 标准化器已加载: {scaler_path}")
+            print(f"✓ Scaler loaded: {scaler_path}")
         else:
-            # 如果没有保存的标准化器，使用默认值（需要根据训练数据调整）
-            print("警告: 未找到标准化器文件，使用默认参数")
+            # If no saved scaler, use default values
+            print("Warning: Scaler file not found, using default parameters")
             self.scaler_x = StandardScaler()
             self.scaler_y = StandardScaler()
     
     def predict(self, input_params: Dict[str, float]) -> Dict[str, Union[float, str]]:
         """
-        预测钢构件的抗压强度
+        Predict compressive strength of steel component
         
         Args:
-            input_params: 输入参数字典，包含:
-                - A: 截面积 (in²)
-                - I: 惯性矩 (in⁴)
-                - c: 截面中心到边缘距离 (in)
-                - L: 柱长度 (in)
-                - fy: 屈服强度 (ksi)
-                - delta_o: 初始缺陷 (in)
+            input_params: Input parameter dictionary containing:
+                - A: Cross-sectional area (in²)
+                - I: Moment of inertia (in⁴)
+                - c: Distance from section center to edge (in)
+                - L: Column length (in)
+                - fy: Yield strength (ksi)
+                - delta_o: Initial imperfection (in)
         
         Returns:
-            预测结果字典，包含:
-                - Pn: 预测的抗压强度 (kip)
-                - status: 预测状态
-                - message: 附加信息
+            Prediction result dictionary containing:
+                - Pn: Predicted compressive strength (kip)
+                - status: Prediction status
+                - message: Additional information
         """
         try:
-            # 验证输入参数
+            # Validate input parameters
             missing_params = [p for p in self.feature_names if p not in input_params]
             if missing_params:
                 return {
                     'Pn': None,
                     'status': 'error',
-                    'message': f'缺少必要参数: {", ".join(missing_params)}'
+                    'message': f'Missing required parameters: {", ".join(missing_params)}'
                 }
             
-            # 准备输入数据
+            # Prepare input data
             X = np.array([[input_params[f] for f in self.feature_names]])
             
-            # 标准化
+            # Standardize
             if self.scaler_x.mean_ is not None:
                 X_scaled = self.scaler_x.transform(X)
             else:
                 X_scaled = X
             
-            # 转换为张量
+            # Convert to tensor
             X_tensor = torch.tensor(X_scaled, dtype=torch.float32).to(self.device)
             
-            # 预测
+            # Predict
             with torch.no_grad():
                 y_pred_scaled = self.model(X_tensor)
             
-            # 反标准化
+            # Inverse standardization
             y_pred_scaled_np = y_pred_scaled.cpu().numpy()
             
             if self.scaler_y.mean_ is not None:
@@ -177,10 +177,10 @@ class PINNPredictor:
             else:
                 y_log = y_pred_scaled_np
             
-            # 反对数变换
+            # Inverse logarithmic transformation
             Pn = np.exp(y_log[0, 0]) - self.SHIFT
             
-            # 计算Perry-Robertson理论值作为参考
+            # Calculate Perry-Robertson theoretical value as reference
             Pn_theory = self._perry_robertson(
                 input_params['A'],
                 input_params['I'],
@@ -195,35 +195,35 @@ class PINNPredictor:
                 'Pn_theory': float(Pn_theory),
                 'ratio': float(Pn / Pn_theory) if Pn_theory > 0 else None,
                 'status': 'success',
-                'message': '预测成功'
+                'message': 'Prediction successful'
             }
             
         except Exception as e:
             return {
                 'Pn': None,
                 'status': 'error',
-                'message': f'预测失败: {str(e)}'
+                'message': f'Prediction failed: {str(e)}'
             }
     
     def _perry_robertson(self, a: float, i: float, c: float, l: float, 
                         fy: float, d: float) -> float:
         """
-        Perry-Robertson公式计算理论强度
+        Perry-Robertson formula for theoretical strength calculation
         
         Args:
-            a: 截面积 (in²)
-            i: 惯性矩 (in⁴)
-            c: 截面中心到边缘距离 (in)
-            l: 柱长度 (in)
-            fy: 屈服强度 (ksi)
-            d: 初始缺陷 (in)
+            a: Cross-sectional area (in²)
+            i: Moment of inertia (in⁴)
+            c: Distance from section center to edge (in)
+            l: Column length (in)
+            fy: Yield strength (ksi)
+            d: Initial imperfection (in)
         
         Returns:
-            理论抗压强度 (kip)
+            Theoretical compressive strength (kip)
         """
         import math
         
-        e = 29000  # 钢的弹性模量 (ksi)
+        e = 29000  # Steel elastic modulus (ksi)
         py = fy * a
         pcre = (math.pi ** 2) * e * i / (l ** 2)
         se = pcre / a
@@ -237,13 +237,13 @@ class PINNPredictor:
     
     def batch_predict(self, input_list: list) -> list:
         """
-        批量预测
+        Batch prediction
         
         Args:
-            input_list: 输入参数列表
+            input_list: List of input parameters
         
         Returns:
-            预测结果列表
+            List of prediction results
         """
         results = []
         for input_params in input_list:
@@ -253,33 +253,32 @@ class PINNPredictor:
     
     def save_scalers(self, scaler_path: str):
         """
-        保存标准化器
+        Save scaler
         
         Args:
-            scaler_path: 保存路径
+            scaler_path: Save path
         """
         with open(scaler_path, 'wb') as f:
             pickle.dump({
                 'scaler_x': self.scaler_x,
                 'scaler_y': self.scaler_y
             }, f)
-        print(f"标准化器已保存到: {scaler_path}")
+        print(f"Scaler saved to: {scaler_path}")
 
 
 if __name__ == "__main__":
-    # 测试代码
+    # Test code
     predictor = PINNPredictor()
     
-    # 示例输入
+    # Example input
     test_input = {
-        'A': 10.0,      # 截面积 (in²)
-        'I': 100.0,     # 惯性矩 (in⁴)
-        'c': 5.0,       # 截面中心到边缘距离 (in)
-        'L': 120.0,     # 柱长度 (in)
-        'fy': 50.0,     # 屈服强度 (ksi)
-        'delta_o': 0.1  # 初始缺陷 (in)
+        'A': 10.0,      # Cross-sectional area (in²)
+        'I': 100.0,     # Moment of inertia (in⁴)
+        'c': 5.0,       # Distance from section center to edge (in)
+        'L': 120.0,     # Column length (in)
+        'fy': 50.0,     # Yield strength (ksi)
+        'delta_o': 0.1  # Initial imperfection (in)
     }
     
     result = predictor.predict(test_input)
-    print("预测结果:", result)
-
+    print("Prediction result:", result)

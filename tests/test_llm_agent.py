@@ -31,14 +31,14 @@ class TestSteelDesignAgent:
             return SteelDesignAgent()
     
     def test_agent_initialization(self, agent_without_model):
-        """测试Agent初始化"""
+        """Test Agent初始化"""
         assert agent_without_model is not None
         assert hasattr(agent_without_model, 'calculator')
         assert hasattr(agent_without_model, 'conversation_history')
         assert hasattr(agent_without_model, 'system_prompt')
     
     def test_agent_configuration(self, agent_without_model):
-        """测试Agent配置"""
+        """Test Agent配置"""
         assert agent_without_model.base_url is not None
         assert agent_without_model.model_name is not None
         assert isinstance(agent_without_model.conversation_history, list)
@@ -85,15 +85,15 @@ class TestSteelDesignAgent:
         )
         
         if not os.path.exists(model_path):
-            pytest.skip("模型文件不存在")
+            pytest.skip("Model file does not exist")
         
         agent_without_model.load_model(model_path)
         
-        # 验证模型已加载到calculator
+        # 验证模型Loaded到calculator
         assert agent_without_model.calculator.predictor.model is not None
     
     def test_system_prompt(self, agent_without_model):
-        """测试系统提示词"""
+        """测试系统Tip词"""
         assert agent_without_model.system_prompt is not None
         assert len(agent_without_model.system_prompt) > 0
         assert '钢柱' in agent_without_model.system_prompt or 'column' in agent_without_model.system_prompt.lower()
@@ -106,16 +106,16 @@ class TestSteelDesignAgent:
         
         response = agent_without_model.chat("测试消息")
         
-        assert "错误" in response or "API" in response
+        assert "Error" in response or "API" in response
         
         # 恢复
         agent_without_model.client = original_client
     
     def test_calculator_integration(self, agent_with_model):
-        """测试计算器集成"""
+        """测试Calculate器集成"""
         assert agent_with_model.calculator is not None
         
-        # 测试直接调用计算器
+        # 测试直接调用Calculate器
         params = {
             'A': 10.0,
             'I': 100.0,
@@ -127,16 +127,16 @@ class TestSteelDesignAgent:
         
         result = agent_with_model.calculator.calculate_column_strength(params)
         
-        # 如果模型加载成功，应该能计算
+        # 如果模型加载Success，应该能Calculate
         if agent_with_model.calculator.model_loaded:
             assert result['success'] == True
 
 
 class TestAgentTools:
-    """测试Agent工具定义"""
+    """Test Agent工具定义"""
     
     def test_steel_strength_tools_definition(self):
-        """测试工具定义格式"""
+        """Test tool定义格式"""
         from agent.tools.steel_strength_tools import STEEL_STRENGTH_TOOLS
         
         assert isinstance(STEEL_STRENGTH_TOOLS, list)
@@ -152,7 +152,7 @@ class TestAgentTools:
         assert 'parameters' in tool['function']
     
     def test_calculate_column_strength_tool_definition(self):
-        """测试钢柱强度计算工具定义"""
+        """测试钢柱强度Calculate工具定义"""
         from agent.tools.steel_strength_tools import STEEL_STRENGTH_TOOLS
         
         # 找到calculate_column_strength工具
@@ -172,7 +172,7 @@ class TestAgentTools:
         assert 'L' in params['properties']
         assert 'fy' in params['properties']
         
-        # 检查必需参数
+        # 检查Required parameters
         assert 'required' in params
         assert 'A' in params['required']
 
