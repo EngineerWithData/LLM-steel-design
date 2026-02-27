@@ -1,6 +1,6 @@
 """
-使用示例脚本
-演示如何使用Agent进行钢结构设计
+Usage Example Script
+Demonstrates how to use Agent for steel structure design
 """
 
 import sys
@@ -12,16 +12,16 @@ from agent.tools import SteelStrengthCalculator
 
 
 def example_1_direct_calculation():
-    """示例1: 直接调用Calculate工具"""
+    """Example 1: Direct call to calculation tool"""
     print("=" * 60)
-    print("示例1: 直接调用钢柱强度Calculate工具")
+    print("Example 1: Direct call to steel column strength calculation tool")
     print("=" * 60)
     
     # Initialize calculator
     model_path = "../PINN model/normal/model_20250123_165719.pth"
     calculator = SteelStrengthCalculator(model_path=model_path)
     
-    # 定义钢柱参数
+    # Define steel column parameters
     column_params = {
         'A': 10.0,      # Cross-sectional area 10 in²
         'I': 100.0,     # Moment of inertia 100 in⁴
@@ -31,7 +31,7 @@ def example_1_direct_calculation():
         'delta_o': 0.1  # Initial imperfection 0.1 in
     }
     
-    print("\n钢柱参数:")
+    print("\nSteel column parameters:")
     print(f"  Cross-sectional area A = {column_params['A']} in²")
     print(f"  Moment of inertia I = {column_params['I']} in⁴")
     print(f"  Distance c = {column_params['c']} in")
@@ -39,46 +39,46 @@ def example_1_direct_calculation():
     print(f"  Yield strength fy = {column_params['fy']} ksi")
     print(f"  Initial imperfection δ₀ = {column_params['delta_o']} in")
     
-    # Calculate强度
+    # Calculate strength
     result = calculator.calculate_column_strength(column_params)
     
     if result['success']:
         print("\nCalculation result:")
         print(f"  ✓ Nominal compressive strength Pn = {result['nominal_strength_Pn']:.2f} kip")
         print(f"  ✓ Theoretical strength = {result['theoretical_strength']:.2f} kip")
-        print(f"  ✓ 预测/理论Ratio = {result['prediction_ratio']:.3f}")
+        print(f"  ✓ Prediction/Theory ratio = {result['prediction_ratio']:.3f}")
     else:
-        print(f"\n✗ CalculateFailed: {result['error']}")
+        print(f"\n✗ Calculation failed: {result['error']}")
     
     print()
 
 
 def example_2_agent_chat():
-    """示例2: 使用Agent进行对话"""
+    """Example 2: Using Agent for conversation"""
     print("=" * 60)
-    print("示例2: 使用LLM Agent进行对话式设计")
+    print("Example 2: Using LLM Agent for conversational design")
     print("=" * 60)
     
-    # 初始化Agent
+    # Initialize Agent
     model_path = "../PINN model/normal/model_20250123_165719.pth"
     agent = SteelDesignAgent(model_path=model_path)
     
     if not agent.client:
-        print("\n⚠ LLM客户端Not initialized，请检查.env配置")
-        print("跳过此示例\n")
+        print("\n⚠ LLM client not initialized, please check .env configuration")
+        print("Skip this example\n")
         return
     
-    # 模拟对话
+    # Simulate conversation
     conversations = [
-        "你好，我需要Calculate一个钢柱的强度",
-        "钢柱参数：Cross-sectional area10square inches，Moment of inertia100，c是5inches，Length120inches，Yield strength50ksi，Initial imperfection0.1inches",
+        "Hello, I need to calculate the strength of a steel column",
+        "Column parameters: cross-sectional area 10 square inches, moment of inertia 100, c is 5 inches, length 120 inches, yield strength 50 ksi, initial imperfection 0.1 inches",
     ]
     
-    print("\n开始对话:")
+    print("\nStart conversation:")
     print("-" * 60)
     
     for user_msg in conversations:
-        print(f"\n用户: {user_msg}")
+        print(f"\nUser: {user_msg}")
         response = agent.chat(user_msg)
         print(f"\nAgent: {response}")
         print("-" * 60)
@@ -87,15 +87,15 @@ def example_2_agent_chat():
 
 
 def example_3_batch_design():
-    """示例3: 批量设计多个钢柱"""
+    """Example 3: Batch design of multiple steel columns"""
     print("=" * 60)
-    print("示例3: 批量设计不同规格的钢柱")
+    print("Example 3: Batch design of steel columns with different specifications")
     print("=" * 60)
     
     model_path = "../PINN model/normal/model_20250123_165719.pth"
     calculator = SteelStrengthCalculator(model_path=model_path)
     
-    # 定义多个钢柱设计方案
+    # Define multiple steel column design cases
     design_cases = [
         {
             'name': 'W8x31 - 10ft',
@@ -126,9 +126,9 @@ def example_3_batch_design():
         },
     ]
     
-    print("\n设计方案对比:")
+    print("\nDesign case comparison:")
     print("-" * 80)
-    print(f"{'方案':<20} {'Length(in)':<12} {'Pn(kip)':<12} {'理论(kip)':<12} {'Ratio':<8}")
+    print(f"{'Case':<20} {'Length(in)':<12} {'Pn(kip)':<12} {'Theory(kip)':<12} {'Ratio':<8}")
     print("-" * 80)
     
     for case in design_cases:
@@ -142,19 +142,19 @@ def example_3_batch_design():
                   f"{result['prediction_ratio']:<8.3f}")
     
     print("-" * 80)
-    print("\n观察: 随着柱Length增加，抗压强度显著降低（细长比效应）\n")
+    print("\nObservation: As column length increases, compressive strength decreases significantly (slenderness ratio effect)\n")
 
 
 def example_4_parametric_study():
-    """示例4: 参数化研究 - Yield strength影响"""
+    """Example 4: Parametric study - Effect of yield strength"""
     print("=" * 60)
-    print("示例4: 参数化研究 - Yield strength对柱强度的影响")
+    print("Example 4: Parametric study - Effect of yield strength on column strength")
     print("=" * 60)
     
     model_path = "../PINN model/normal/model_20250123_165719.pth"
     calculator = SteelStrengthCalculator(model_path=model_path)
     
-    # 固定其他参数，改变Yield strength
+    # Fix other parameters, vary yield strength
     base_params = {
         'A': 10.0,
         'I': 100.0,
@@ -165,14 +165,14 @@ def example_4_parametric_study():
     
     fy_values = [36, 42, 50, 60, 70]  # ksi
     
-    print("\n固定参数:")
+    print("\nFixed parameters:")
     print(f"  A = {base_params['A']} in²")
     print(f"  I = {base_params['I']} in⁴")
     print(f"  L = {base_params['L']} in")
     
-    print("\nYield strength影响分析:")
+    print("\nYield strength effect analysis:")
     print("-" * 60)
-    print(f"{'fy (ksi)':<12} {'Pn (kip)':<15} {'增长率':<12}")
+    print(f"{'fy (ksi)':<12} {'Pn (kip)':<15} {'Growth rate':<12}")
     print("-" * 60)
     
     prev_pn = None
@@ -189,14 +189,14 @@ def example_4_parametric_study():
             prev_pn = pn
     
     print("-" * 60)
-    print("\n观察: Yield strength提高可以显著增加柱的抗压强度\n")
+    print("\nObservation: Increasing yield strength can significantly increase column compressive strength\n")
 
 
 def main():
-    """运行所有示例"""
+    """Run all examples"""
     print("\n")
     print("╔" + "═" * 58 + "╗")
-    print("║" + " " * 12 + "钢结构设计Agent - 使用示例" + " " * 16 + "║")
+    print("║" + " " * 12 + "Steel Structure Design Agent - Usage Examples" + " " * 0 + "║")
     print("╚" + "═" * 58 + "╝")
     print("\n")
     
@@ -204,35 +204,34 @@ def main():
         # Check model file
         model_path = "../PINN model/normal/model_20250123_165719.pth"
         if not os.path.exists(model_path):
-            print(f"⚠ Warning: 未找到模型文件 {model_path}")
-            print("某些示例可能无法运行\n")
+            print(f"⚠ Warning: Model file not found {model_path}")
+            print("Some examples may not run\n")
         
-        # 运行示例
+        # Run examples
         example_1_direct_calculation()
-        input("按Enter继续下一个示例...")
+        input("Press Enter to continue to next example...")
         
         example_2_agent_chat()
-        input("按Enter继续下一个示例...")
+        input("Press Enter to continue to next example...")
         
         example_3_batch_design()
-        input("按Enter继续下一个示例...")
+        input("Press Enter to continue to next example...")
         
         example_4_parametric_study()
         
         print("=" * 60)
-        print("所有示例演示完成！")
+        print("All example demonstrations completed!")
         print("=" * 60)
-        print("\n要启动交互式Agent，Please run: python agent.py")
+        print("\nTo start interactive Agent, please run: python agent.py")
         print()
         
     except KeyboardInterrupt:
-        print("\n\n示例演示已中断")
+        print("\n\nExample demonstration interrupted")
     except Exception as e:
-        print(f"\n✗ 示例运行出错: {e}")
+        print(f"\n✗ Example execution error: {e}")
         import traceback
         traceback.print_exc()
 
 
 if __name__ == "__main__":
     main()
-

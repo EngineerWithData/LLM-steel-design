@@ -1,6 +1,6 @@
 """
-多轮对话演示脚本
-展示Agent如何处理不完整信息和无关问题
+Multi-turn Dialogue Demo Script
+Demonstrates how Agent handles incomplete information and unrelated questions
 """
 
 import sys
@@ -12,12 +12,12 @@ import time
 
 
 def print_separator():
-    """打印分隔线"""
+    """Print separator line"""
     print("\n" + "=" * 80 + "\n")
 
 
 def simulate_typing(text, delay=0.03):
-    """模拟打字效果"""
+    """Simulate typing effect"""
     for char in text:
         print(char, end='', flush=True)
         time.sleep(delay)
@@ -25,9 +25,9 @@ def simulate_typing(text, delay=0.03):
 
 
 def demo_scenario_1():
-    """演示场景1: 逐步提供参数"""
+    """Demo Scenario 1: Gradually provide parameters"""
     print("╔" + "═" * 78 + "╗")
-    print("║" + " " * 20 + "场景1: 逐步提供参数" + " " * 36 + "║")
+    print("║" + " " * 20 + "Scenario 1: Gradually Provide Parameters" + " " * 16 + "║")
     print("╚" + "═" * 78 + "╝")
     print()
     
@@ -39,22 +39,22 @@ def demo_scenario_1():
     agent = SteelDesignAgent(model_path=model_path)
     
     if not agent.client:
-        print("⚠ 需要配置API密钥才能运行此演示")
-        print("请在.env文件中设置DASHSCOPE_API_KEY")
+        print("⚠ API key configuration required to run this demo")
+        print("Please set DASHSCOPE_API_KEY in .env file")
         return
     
-    print("这个场景展示了Agent如何引导用户逐步提供完整的参数\n")
+    print("This scenario demonstrates how Agent guides users to gradually provide complete parameters\n")
     
     conversations = [
-        ("用户", "你好，我想Calculate钢柱强度"),
-        ("用户", "Cross-sectional area是10square inches"),
-        ("用户", "Moment of inertia100，c是5inches"),
-        ("用户", "Length120inches，Yield strength50ksi，Initial imperfection0.1inches"),
+        ("User", "Hello, I want to calculate steel column strength"),
+        ("User", "Cross-sectional area is 10 square inches"),
+        ("User", "Moment of inertia 100, c is 5 inches"),
+        ("User", "Length 120 inches, yield strength 50 ksi, initial imperfection 0.1 inches"),
     ]
     
     for role, message in conversations:
         print(f"{role}: {message}")
-        if role == "用户":
+        if role == "User":
             response = agent.chat(message)
             print(f"\nAgent: {response}")
             print_separator()
@@ -62,9 +62,9 @@ def demo_scenario_1():
 
 
 def demo_scenario_2():
-    """演示场景2: 处理无关问题"""
+    """Demo Scenario 2: Handle unrelated questions"""
     print("╔" + "═" * 78 + "╗")
-    print("║" + " " * 20 + "场景2: 处理无关问题" + " " * 36 + "║")
+    print("║" + " " * 20 + "Scenario 2: Handle Unrelated Questions" + " " * 18 + "║")
     print("╚" + "═" * 78 + "╝")
     print()
     
@@ -76,21 +76,21 @@ def demo_scenario_2():
     agent = SteelDesignAgent(model_path=model_path)
     
     if not agent.client:
-        print("⚠ 需要配置API密钥")
+        print("⚠ API key configuration required")
         return
     
-    print("这个场景展示了Agent如何处理与钢结构设计无关的问题\n")
+    print("This scenario demonstrates how Agent handles questions unrelated to steel structure design\n")
     
     conversations = [
-        ("用户", "你好，你是谁？"),
-        ("用户", "今天天气怎么样？"),
-        ("用户", "好的，回到正题。我需要Calculate钢柱强度"),
-        ("用户", "A=10, I=100, c=5, L=120, fy=50, delta_o=0.1"),
+        ("User", "Hello, who are you?"),
+        ("User", "How's the weather today?"),
+        ("User", "OK, back to the topic. I need to calculate steel column strength"),
+        ("User", "A=10, I=100, c=5, L=120, fy=50, delta_o=0.1"),
     ]
     
     for role, message in conversations:
         print(f"{role}: {message}")
-        if role == "用户":
+        if role == "User":
             response = agent.chat(message)
             print(f"\nAgent: {response}")
             print_separator()
@@ -98,9 +98,9 @@ def demo_scenario_2():
 
 
 def demo_scenario_3():
-    """演示场景3: 询问缺失参数"""
+    """Demo Scenario 3: Ask for missing parameters"""
     print("╔" + "═" * 78 + "╗")
-    print("║" + " " * 20 + "场景3: 主动询问缺失参数" + " " * 32 + "║")
+    print("║" + " " * 20 + "Scenario 3: Proactively Ask for Missing Parameters" + " " * 6 + "║")
     print("╚" + "═" * 78 + "╝")
     print()
     
@@ -112,21 +112,21 @@ def demo_scenario_3():
     agent = SteelDesignAgent(model_path=model_path)
     
     if not agent.client:
-        print("⚠ 需要配置API密钥")
+        print("⚠ API key configuration required")
         return
     
-    print("这个场景展示了Agent如何识别缺失的参数并主动询问\n")
+    print("This scenario demonstrates how Agent identifies missing parameters and proactively asks\n")
     
     conversations = [
-        ("用户", "Calculate钢柱强度：A=10, I=100"),
-        ("用户", "还需要什么参数？"),
-        ("用户", "c=5, L=120"),
-        ("用户", "fy=50, delta_o=0.1"),
+        ("User", "Calculate steel column strength: A=10, I=100"),
+        ("User", "What other parameters do I need?"),
+        ("User", "c=5, L=120"),
+        ("User", "fy=50, delta_o=0.1"),
     ]
     
     for role, message in conversations:
         print(f"{role}: {message}")
-        if role == "用户":
+        if role == "User":
             response = agent.chat(message)
             print(f"\nAgent: {response}")
             print_separator()
@@ -134,9 +134,9 @@ def demo_scenario_3():
 
 
 def demo_scenario_4():
-    """演示场景4: 上下文记忆"""
+    """Demo Scenario 4: Context memory"""
     print("╔" + "═" * 78 + "╗")
-    print("║" + " " * 20 + "场景4: 上下文记忆能力" + " " * 34 + "║")
+    print("║" + " " * 20 + "Scenario 4: Context Memory Capability" + " " * 19 + "║")
     print("╚" + "═" * 78 + "╝")
     print()
     
@@ -148,20 +148,20 @@ def demo_scenario_4():
     agent = SteelDesignAgent(model_path=model_path)
     
     if not agent.client:
-        print("⚠ 需要配置API密钥")
+        print("⚠ API key configuration required")
         return
     
-    print("这个场景展示了Agent如何记住之前对话中的信息\n")
+    print("This scenario demonstrates how Agent remembers information from previous conversations\n")
     
     conversations = [
-        ("用户", "我有一个W8x31的钢柱，Cross-sectional area9.13square inches"),
-        ("用户", "你记得我刚才说的Cross-sectional area是多少吗？"),
-        ("用户", "好的，继续。I=110, c=4, L=120, fy=50, delta_o=0.1"),
+        ("User", "I have a W8x31 steel column, cross-sectional area 9.13 square inches"),
+        ("User", "Do you remember what cross-sectional area I just mentioned?"),
+        ("User", "OK, continue. I=110, c=4, L=120, fy=50, delta_o=0.1"),
     ]
     
     for role, message in conversations:
         print(f"{role}: {message}")
-        if role == "用户":
+        if role == "User":
             response = agent.chat(message)
             print(f"\nAgent: {response}")
             print_separator()
@@ -169,9 +169,9 @@ def demo_scenario_4():
 
 
 def interactive_demo():
-    """交互式演示"""
+    """Interactive demo"""
     print("╔" + "═" * 78 + "╗")
-    print("║" + " " * 20 + "交互式演示模式" + " " * 40 + "║")
+    print("║" + " " * 20 + "Interactive Demo Mode" + " " * 36 + "║")
     print("╚" + "═" * 78 + "╝")
     print()
     
@@ -183,27 +183,27 @@ def interactive_demo():
     agent = SteelDesignAgent(model_path=model_path)
     
     if not agent.client:
-        print("⚠ 需要配置API密钥")
+        print("⚠ API key configuration required")
         return
     
-    print("现在您可以与Agent自由对话")
-    print("输入 'quit' 退出，输入 'reset' 重置对话")
+    print("Now you can freely chat with Agent")
+    print("Type 'quit' to exit, type 'reset' to reset conversation")
     print_separator()
     
     while True:
         try:
-            user_input = input("用户: ").strip()
+            user_input = input("User: ").strip()
             
             if not user_input:
                 continue
             
-            if user_input.lower() in ['quit', 'exit', '退出']:
-                print("演示结束！")
+            if user_input.lower() in ['quit', 'exit']:
+                print("Demo ended!")
                 break
             
-            if user_input.lower() in ['reset', '重置']:
+            if user_input.lower() == 'reset':
                 agent.reset_conversation()
-                print("对话已重置")
+                print("Conversation reset")
                 continue
             
             response = agent.chat(user_input)
@@ -211,43 +211,43 @@ def interactive_demo():
             print_separator()
             
         except KeyboardInterrupt:
-            print("\n\n演示结束！")
+            print("\n\nDemo ended!")
             break
 
 
 def main():
-    """主函数"""
+    """Main function"""
     print("\n")
     print("╔" + "═" * 78 + "╗")
-    print("║" + " " * 15 + "钢结构设计Agent - 多轮对话演示" + " " * 28 + "║")
+    print("║" + " " * 15 + "Steel Structure Design Agent - Multi-turn Dialogue Demo" + " " * 6 + "║")
     print("╚" + "═" * 78 + "╝")
     print()
     
-    print("本演示展示Agent的多轮对话能力：")
-    print("  1. 逐步提供参数")
-    print("  2. 处理无关问题")
-    print("  3. 主动询问缺失参数")
-    print("  4. 上下文记忆能力")
-    print("  5. 交互式演示")
+    print("This demo showcases Agent's multi-turn dialogue capabilities:")
+    print("  1. Gradually provide parameters")
+    print("  2. Handle unrelated questions")
+    print("  3. Proactively ask for missing parameters")
+    print("  4. Context memory capability")
+    print("  5. Interactive demo")
     print()
     
-    print("注意: 需要配置LLM API密钥才能运行演示")
+    print("Note: LLM API key configuration required to run demo")
     print()
     
     while True:
-        print("请选择演示场景:")
-        print("  1 - 场景1: 逐步提供参数")
-        print("  2 - 场景2: 处理无关问题")
-        print("  3 - 场景3: 主动询问缺失参数")
-        print("  4 - 场景4: 上下文记忆能力")
-        print("  5 - 交互式演示")
-        print("  0 - 退出")
+        print("Please select demo scenario:")
+        print("  1 - Scenario 1: Gradually provide parameters")
+        print("  2 - Scenario 2: Handle unrelated questions")
+        print("  3 - Scenario 3: Proactively ask for missing parameters")
+        print("  4 - Scenario 4: Context memory capability")
+        print("  5 - Interactive demo")
+        print("  0 - Exit")
         print()
         
-        choice = input("请输入选项 (0-5): ").strip()
+        choice = input("Please enter option (0-5): ").strip()
         
         if choice == '0':
-            print("再见！")
+            print("Goodbye!")
             break
         elif choice == '1':
             demo_scenario_1()
@@ -260,11 +260,10 @@ def main():
         elif choice == '5':
             interactive_demo()
         else:
-            print("无效选项，请重新选择")
+            print("Invalid option, please select again")
         
         print()
 
 
 if __name__ == "__main__":
     main()
-

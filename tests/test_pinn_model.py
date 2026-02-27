@@ -1,5 +1,5 @@
 """
-测试PINN模型推理功能
+Test PINN model inference functionality
 """
 
 import sys
@@ -12,23 +12,23 @@ from agent.models import PINNPredictor
 
 
 class TestPINNPredictor:
-    """PINN预测器测试类"""
+    """PINN predictor test class"""
     
     @pytest.fixture
     def predictor(self):
-        """创建预测器实例"""
+        """Create predictor instance"""
         return PINNPredictor()
     
     @pytest.fixture
     def model_path(self):
-        """获取模型路径"""
+        """Get model path"""
         return os.path.join(
             os.path.dirname(os.path.dirname(__file__)),
             "PINN model/normal/model_20250123_165719.pth"
         )
     
     def test_perry_robertson_formula(self, predictor):
-        """测试Perry-Robertson公式Calculate"""
+        """Test Perry-Robertson formula calculation"""
         # Test data
         params = {
             'A': 10.0,
@@ -39,47 +39,47 @@ class TestPINNPredictor:
             'delta_o': 0.1
         }
         
-        # CalculateTheoretical strength
+        # Calculate theoretical strength
         Pn = predictor._perry_robertson(
             params['A'], params['I'], params['c'],
             params['L'], params['fy'], params['delta_o']
         )
         
-        # 验证结果
-        assert Pn > 0, "Perry-Robertson强度应该大于0"
-        assert Pn < params['A'] * params['fy'], "强度不应超过截面Yield strength"
-        assert isinstance(Pn, float), "返回值应该是浮点数"
+        # Verify result
+        assert Pn > 0, "Perry-Robertson strength should be greater than 0"
+        assert Pn < params['A'] * params['fy'], "Strength should not exceed section yield strength"
+        assert isinstance(Pn, float), "Return value should be float"
     
     def test_perry_robertson_edge_cases(self, predictor):
-        """测试Perry-Robertson公式的边界情况"""
-        # 测试Short column（高强度）
+        """Test Perry-Robertson formula edge cases"""
+        # Test short column (high strength)
         Pn_short = predictor._perry_robertson(10.0, 100.0, 5.0, 50.0, 50.0, 0.1)
         
-        # 测试Long column（低强度）
+        # Test long column (low strength)
         Pn_long = predictor._perry_robertson(10.0, 100.0, 5.0, 300.0, 50.0, 0.1)
         
-        # Long column强度应该小于Short column
-        assert Pn_long < Pn_short, "Long column强度应该小于Short column"
+        # Long column strength should be less than short column
+        assert Pn_long < Pn_short, "Long column strength should be less than short column"
     
     def test_model_loading(self, predictor, model_path):
-        """测试模型加载"""
+        """Test model loading"""
         if not os.path.exists(model_path):
             pytest.skip("Model file does not exist")
         
-        # 加载模型
+        # Load model
         predictor.load_model(model_path)
         
-        # 验证模型Loaded
-        assert predictor.model is not None, "模型应该Loaded"
-        assert predictor.scaler_x is not None, "X标准化器应该Loaded"
-        assert predictor.scaler_y is not None, "Y标准化器应该Loaded"
+        # Verify model loaded
+        assert predictor.model is not None, "Model should be loaded"
+        assert predictor.scaler_x is not None, "X scaler should be loaded"
+        assert predictor.scaler_y is not None, "Y scaler should be loaded"
     
     def test_prediction_with_model(self, predictor, model_path):
-        """测试使用模型进行预测"""
+        """Test prediction using model"""
         if not os.path.exists(model_path):
             pytest.skip("Model file does not exist")
         
-        # 加载模型
+        # Load model
         predictor.load_model(model_path)
         
         # Test data
@@ -92,18 +92,18 @@ class TestPINNPredictor:
             'delta_o': 0.1
         }
         
-        # 预测
+        # Predict
         result = predictor.predict(params)
         
-        # 验证结果
-        assert result['status'] == 'success', "预测应该Success"
-        assert 'Pn' in result, "结果应该包含Pn"
-        assert result['Pn'] > 0, "Predicted strength应该大于0"
-        assert 'Pn_theory' in result, "结果应该包含理论值"
-        assert 'ratio' in result, "结果应该包含Ratio"
+        # Verify result
+        assert result['status'] == 'success', "Prediction should succeed"
+        assert 'Pn' in result, "Result should contain Pn"
+        assert result['Pn'] > 0, "Predicted strength should be greater than 0"
+        assert 'Pn_theory' in result, "Result should contain theoretical value"
+        assert 'ratio' in result, "Result should contain ratio"
     
     def test_prediction_without_model(self, predictor):
-        """测试没有加载模型时的预测"""
+        """Test prediction without loading model"""
         params = {
             'A': 10.0,
             'I': 100.0,
@@ -115,12 +115,12 @@ class TestPINNPredictor:
         
         result = predictor.predict(params)
         
-        # 没有模型时应该返回Error
-        assert result['status'] == 'error', "没有模型时应该返回Error"
+        # Should return error without model
+        assert result['status'] == 'error', "Should return error without model"
     
     def test_missing_parameters(self, predictor):
-        """测试Missing parameters的情况"""
-        # 缺少delta_o参数
+        """Test missing parameters case"""
+        # Missing delta_o parameter
         params = {
             'A': 10.0,
             'I': 100.0,
@@ -131,20 +131,20 @@ class TestPINNPredictor:
         
         result = predictor.predict(params)
         
-        # 应该返回Error
-        assert result['status'] == 'error', "Missing parameters时应该返回Error"
-        assert 'message' in result, "Error信息应该包含message"
+        # Should return error
+        assert result['status'] == 'error', "Should return error when parameters are missing"
+        assert 'message' in result, "Error message should contain message"
     
     def test_invalid_parameters(self, predictor, model_path):
-        """测试无效参数"""
+        """Test invalid parameters"""
         if not os.path.exists(model_path):
             pytest.skip("Model file does not exist")
         
         predictor.load_model(model_path)
         
-        # 负数参数
+        # Negative parameter
         params = {
-            'A': -10.0,  # 负数
+            'A': -10.0,  # Negative
             'I': 100.0,
             'c': 5.0,
             'L': 120.0,
@@ -152,12 +152,12 @@ class TestPINNPredictor:
             'delta_o': 0.1
         }
         
-        # 预测应该仍然执行（Parameter validation在工具层）
+        # Prediction should still execute (parameter validation is at tool layer)
         result = predictor.predict(params)
         assert 'Pn' in result or result['status'] == 'error'
     
     def test_batch_prediction(self, predictor, model_path):
-        """测试批量预测"""
+        """Test batch prediction"""
         if not os.path.exists(model_path):
             pytest.skip("Model file does not exist")
         
@@ -170,18 +170,17 @@ class TestPINNPredictor:
             {'A': 10.0, 'I': 100.0, 'c': 5.0, 'L': 200.0, 'fy': 50.0, 'delta_o': 0.1},
         ]
         
-        # 批量预测
+        # Batch prediction
         results = predictor.batch_predict(test_cases)
         
-        # 验证结果
-        assert len(results) == len(test_cases), "结果数量应该与输入相同"
+        # Verify results
+        assert len(results) == len(test_cases), "Result count should match input"
         
-        # 验证强度随Length增加而减小
+        # Verify strength decreases with increasing length
         strengths = [r['Pn'] for r in results if r['status'] == 'success']
         if len(strengths) == 3:
-            assert strengths[0] > strengths[1] > strengths[2], "强度应该随Length增加而减小"
+            assert strengths[0] > strengths[1] > strengths[2], "Strength should decrease with increasing length"
 
 
 if __name__ == "__main__":
     pytest.main([__file__, "-v"])
-

@@ -1,5 +1,5 @@
 """
-测试多轮对话功能
+Test multi-turn dialogue functionality
 """
 
 import sys
@@ -10,53 +10,53 @@ from agent import SteelDesignAgent
 
 
 def test_multi_turn_conversation():
-    """测试多轮对话场景"""
+    """Test multi-turn conversation scenario"""
     print("=" * 80)
-    print("测试场景1: 多轮对话 - 逐步提供参数")
+    print("Test Scenario 1: Multi-turn Dialogue - Gradually Provide Parameters")
     print("=" * 80)
     
-    # 初始化Agent
+    # Initialize Agent
     model_path = os.path.join(
         os.path.dirname(os.path.dirname(__file__)),
         "PINN model/normal/model_20250123_165719.pth"
     )
     
     if not os.path.exists(model_path):
-        print("⚠ Model file does not exist，Skip this test")
+        print("⚠ Model file does not exist, skip this test")
         return
     
     agent = SteelDesignAgent(model_path=model_path)
     
     if not agent.client:
-        print("⚠ LLM客户端Not initialized，Skip this test")
+        print("⚠ LLM client not initialized, skip this test")
         return
     
-    # 模拟多轮对话
+    # Simulate multi-turn conversation
     conversations = [
-        "你好，我想Calculate钢柱强度",
-        "Cross-sectional area是10square inches，Moment of inertia是100",
-        "c是5inches，Length120inches",
-        "Yield strength50ksi，Initial imperfection0.1inches",
+        "Hello, I want to calculate steel column strength",
+        "Cross-sectional area is 10 square inches, moment of inertia is 100",
+        "c is 5 inches, length 120 inches",
+        "Yield strength 50 ksi, initial imperfection 0.1 inches",
     ]
     
-    print("\n开始多轮对话测试:\n")
+    print("\nStart multi-turn conversation test:\n")
     
     for i, user_msg in enumerate(conversations, 1):
-        print(f"第{i}轮对话:")
-        print(f"用户: {user_msg}")
+        print(f"Round {i}:")
+        print(f"User: {user_msg}")
         
         response = agent.chat(user_msg)
         print(f"Agent: {response}")
         print("-" * 80)
         print()
     
-    print("✓ 多轮对话测试完成\n")
+    print("✓ Multi-turn conversation test completed\n")
 
 
 def test_unrelated_questions():
-    """测试无关问题处理"""
+    """Test handling of unrelated questions"""
     print("=" * 80)
-    print("测试场景2: 处理无关问题")
+    print("Test Scenario 2: Handle Unrelated Questions")
     print("=" * 80)
     
     model_path = os.path.join(
@@ -65,39 +65,39 @@ def test_unrelated_questions():
     )
     
     if not os.path.exists(model_path):
-        print("⚠ Model file does not exist，Skip this test")
+        print("⚠ Model file does not exist, skip this test")
         return
     
     agent = SteelDesignAgent(model_path=model_path)
     
     if not agent.client:
-        print("⚠ LLM客户端Not initialized，Skip this test")
+        print("⚠ LLM client not initialized, skip this test")
         return
     
-    # 测试各种类型的问题
+    # Test various types of questions
     test_questions = [
-        "你好，你是谁？",
-        "今天天气怎么样？",
-        "你能帮我做数学题吗？",
-        "回到正题，我需要Calculate钢柱强度",
+        "Hello, who are you?",
+        "How's the weather today?",
+        "Can you help me with math homework?",
+        "Back to the topic, I need to calculate steel column strength",
     ]
     
-    print("\n开始无关问题测试:\n")
+    print("\nStart unrelated question test:\n")
     
     for i, question in enumerate(test_questions, 1):
-        print(f"问题{i}: {question}")
+        print(f"Question {i}: {question}")
         response = agent.chat(question)
         print(f"Agent: {response}")
         print("-" * 80)
         print()
     
-    print("✓ 无关问题处理测试完成\n")
+    print("✓ Unrelated question handling test completed\n")
 
 
 def test_incomplete_parameters():
-    """测试参数不完整的处理"""
+    """Test handling of incomplete parameters"""
     print("=" * 80)
-    print("测试场景3: 参数不完整时的引导")
+    print("Test Scenario 3: Guidance When Parameters Are Incomplete")
     print("=" * 80)
     
     model_path = os.path.join(
@@ -106,40 +106,40 @@ def test_incomplete_parameters():
     )
     
     if not os.path.exists(model_path):
-        print("⚠ Model file does not exist，Skip this test")
+        print("⚠ Model file does not exist, skip this test")
         return
     
     agent = SteelDesignAgent(model_path=model_path)
     
     if not agent.client:
-        print("⚠ LLM客户端Not initialized，Skip this test")
+        print("⚠ LLM client not initialized, skip this test")
         return
     
-    # 测试参数逐步补充
+    # Test gradual parameter completion
     conversations = [
-        "Calculate钢柱强度，A=10",
+        "Calculate steel column strength, A=10",
         "I=100, c=5",
-        "还需要什么参数？",
+        "What other parameters do I need?",
         "L=120, fy=50, delta_o=0.1",
     ]
     
-    print("\n开始参数补充测试:\n")
+    print("\nStart parameter completion test:\n")
     
     for i, msg in enumerate(conversations, 1):
-        print(f"第{i}轮:")
-        print(f"用户: {msg}")
+        print(f"Round {i}:")
+        print(f"User: {msg}")
         response = agent.chat(msg)
         print(f"Agent: {response}")
         print("-" * 80)
         print()
     
-    print("✓ 参数补充测试完成\n")
+    print("✓ Parameter completion test completed\n")
 
 
 def test_context_memory():
-    """测试上下文记忆"""
+    """Test context memory"""
     print("=" * 80)
-    print("测试场景4: 上下文记忆")
+    print("Test Scenario 4: Context Memory")
     print("=" * 80)
     
     model_path = os.path.join(
@@ -148,40 +148,40 @@ def test_context_memory():
     )
     
     if not os.path.exists(model_path):
-        print("⚠ Model file does not exist，Skip this test")
+        print("⚠ Model file does not exist, skip this test")
         return
     
     agent = SteelDesignAgent(model_path=model_path)
     
     if not agent.client:
-        print("⚠ LLM客户端Not initialized，Skip this test")
+        print("⚠ LLM client not initialized, skip this test")
         return
     
-    # Test Agent是否记住之前的信息
+    # Test if Agent remembers previous information
     conversations = [
-        "我有一个钢柱，Cross-sectional area10square inches",
-        "Moment of inertia是100",
-        "你记得我刚才说的Cross-sectional area是多少吗？",
-        "好的，继续。c=5, L=120, fy=50, delta_o=0.1",
+        "I have a steel column, cross-sectional area is 10 square inches",
+        "Moment of inertia is 100",
+        "Do you remember what cross-sectional area I just mentioned?",
+        "OK, continue. c=5, L=120, fy=50, delta_o=0.1",
     ]
     
-    print("\n开始上下文记忆测试:\n")
+    print("\nStart context memory test:\n")
     
     for i, msg in enumerate(conversations, 1):
-        print(f"第{i}轮:")
-        print(f"用户: {msg}")
+        print(f"Round {i}:")
+        print(f"User: {msg}")
         response = agent.chat(msg)
         print(f"Agent: {response}")
         print("-" * 80)
         print()
     
-    print("✓ 上下文记忆测试完成\n")
+    print("✓ Context memory test completed\n")
 
 
 def test_mixed_conversation():
-    """测试混合对话（专业+闲聊）"""
+    """Test mixed conversation (professional + casual)"""
     print("=" * 80)
-    print("测试场景5: 混合对话")
+    print("Test Scenario 5: Mixed Conversation")
     print("=" * 80)
     
     model_path = os.path.join(
@@ -190,71 +190,71 @@ def test_mixed_conversation():
     )
     
     if not os.path.exists(model_path):
-        print("⚠ Model file does not exist，Skip this test")
+        print("⚠ Model file does not exist, skip this test")
         return
     
     agent = SteelDesignAgent(model_path=model_path)
     
     if not agent.client:
-        print("⚠ LLM客户端Not initialized，Skip this test")
+        print("⚠ LLM client not initialized, skip this test")
         return
     
-    # 混合专业和闲聊
+    # Mix professional and casual conversation
     conversations = [
-        "你好！",
-        "我需要设计一个钢柱",
-        "等等，你能解释一下什么是Moment of inertia吗？",
-        "明白了。那我的参数是：A=10, I=100, c=5, L=120, fy=50, delta_o=0.1",
-        "谢谢！这个结果可靠吗？",
+        "Hello!",
+        "I need to design a steel column",
+        "Wait, can you explain what moment of inertia is?",
+        "Got it. My parameters are: A=10, I=100, c=5, L=120, fy=50, delta_o=0.1",
+        "Thanks! Is this result reliable?",
     ]
     
-    print("\n开始混合对话测试:\n")
+    print("\nStart mixed conversation test:\n")
     
     for i, msg in enumerate(conversations, 1):
-        print(f"第{i}轮:")
-        print(f"用户: {msg}")
+        print(f"Round {i}:")
+        print(f"User: {msg}")
         response = agent.chat(msg)
         print(f"Agent: {response}")
         print("-" * 80)
         print()
     
-    print("✓ 混合对话测试完成\n")
+    print("✓ Mixed conversation test completed\n")
 
 
 def main():
-    """运行所有多轮对话测试"""
+    """Run all multi-turn dialogue tests"""
     print("\n")
     print("╔" + "═" * 78 + "╗")
-    print("║" + " " * 20 + "多轮对话功能测试" + " " * 38 + "║")
+    print("║" + " " * 20 + "Multi-turn Dialogue Functionality Test" + " " * 18 + "║")
     print("╚" + "═" * 78 + "╝")
     print("\n")
     
-    print("注意: 这些测试需要配置LLM API密钥才能运行")
-    print("如果未配置API，测试将被跳过")
+    print("Note: These tests require LLM API key configuration to run")
+    print("If API is not configured, tests will be skipped")
     print()
     
     try:
         test_multi_turn_conversation()
-        input("按Enter继续下一个测试...")
+        input("Press Enter to continue to next test...")
         
         test_unrelated_questions()
-        input("按Enter继续下一个测试...")
+        input("Press Enter to continue to next test...")
         
         test_incomplete_parameters()
-        input("按Enter继续下一个测试...")
+        input("Press Enter to continue to next test...")
         
         test_context_memory()
-        input("按Enter继续下一个测试...")
+        input("Press Enter to continue to next test...")
         
         test_mixed_conversation()
         
         print("=" * 80)
-        print("所有多轮对话测试完成！")
+        print("All multi-turn dialogue tests completed!")
         print("=" * 80)
         print()
         
     except KeyboardInterrupt:
-        print("\n\n测试已中断")
+        print("\n\nTest interrupted")
     except Exception as e:
         print(f"\n✗ Error occurred during testing: {e}")
         import traceback
@@ -263,4 +263,3 @@ def main():
 
 if __name__ == "__main__":
     main()
-

@@ -1,16 +1,16 @@
 """
-测试配置文件
+Test configuration file
 """
 
 import sys
 import os
 
-# 添加项目根目录到路径
+# Add project root directory to path
 sys.path.insert(0, os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
 
-# pytest配置
+# pytest configuration
 def pytest_configure(config):
-    """pytest配置"""
+    """pytest configuration"""
     config.addinivalue_line(
         "markers", "slow: marks tests as slow (deselect with '-m \"not slow\"')"
     )
@@ -20,4 +20,3 @@ def pytest_configure(config):
     config.addinivalue_line(
         "markers", "unit: marks tests as unit tests"
     )
-

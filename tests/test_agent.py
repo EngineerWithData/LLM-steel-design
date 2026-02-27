@@ -14,20 +14,20 @@ import json
 def test_pinn_predictor():
     """Test PINN model predictor"""
     print("=" * 60)
-    print("测试1: PINN模型预测器")
+    print("Test 1: PINN Model Predictor")
     print("=" * 60)
     
     from agent.models import PINNPredictor
     
-    # Initialize predictor（Do not load model，Only test Perry-Robertson formula）
+    # Initialize predictor (without loading model, only test Perry-Robertson formula)
     predictor = PINNPredictor()
     
     # Test data
     test_input = {
         'A': 10.0,      # Cross-sectional area (in²)
         'I': 100.0,     # Moment of inertia (in⁴)
-        'c': 5.0,       # 截面中心到边缘Distance (in)
-        'L': 120.0,     # 柱Length (in)
+        'c': 5.0,       # Distance from center to edge (in)
+        'L': 120.0,     # Column length (in)
         'fy': 50.0,     # Yield strength (ksi)
         'delta_o': 0.1  # Initial imperfection (in)
     }
@@ -36,7 +36,7 @@ def test_pinn_predictor():
     for key, value in test_input.items():
         print(f"  {key}: {value}")
     
-    # CalculatePerry-Robertson理论值
+    # Calculate Perry-Robertson theoretical value
     Pn_theory = predictor._perry_robertson(
         test_input['A'],
         test_input['I'],
@@ -46,14 +46,14 @@ def test_pinn_predictor():
         test_input['delta_o']
     )
     
-    print(f"\nPerry-RobertsonTheoretical strength: {Pn_theory:.2f} kip")
+    print(f"\nPerry-Robertson theoretical strength: {Pn_theory:.2f} kip")
     print("✓ PINN predictor basic functionality normal\n")
 
 
 def test_steel_strength_calculator():
     """Test steel component strength calculator"""
     print("=" * 60)
-    print("测试2: 钢构件强度Calculate器")
+    print("Test 2: Steel Component Strength Calculator")
     print("=" * 60)
     
     # Check model file
@@ -88,36 +88,36 @@ def test_steel_strength_calculator():
     print(json.dumps(result, indent=2, ensure_ascii=False))
     
     if result['success']:
-        print("✓ 钢构件强度Calculate器功能正常\n")
+        print("✓ Steel component strength calculator functionality normal\n")
     else:
-        print("✗ CalculateFailed\n")
+        print("✗ Calculation failed\n")
 
 
 def test_agent_without_llm():
-    """Test Agent（Do not call LLM）"""
+    """Test Agent (without calling LLM)"""
     print("=" * 60)
-    print("测试3: Agent初始化")
+    print("Test 3: Agent Initialization")
     print("=" * 60)
     
     model_path = os.path.join(os.path.dirname(os.path.dirname(__file__)), 
                               "PINN model/normal/model_20250123_165719.pth")
     
-    # 初始化Agent
+    # Initialize Agent
     agent = SteelDesignAgent(model_path=model_path if os.path.exists(model_path) else None)
     
-    print("\nAgent配置:")
+    print("\nAgent configuration:")
     print(f"  Base URL: {agent.base_url}")
     print(f"  Model: {agent.model_name}")
     print(f"  API Key: {'Set' if agent.api_key else 'Not set'}")
     print(f"  Client: {'Initialized' if agent.client else 'Not initialized'}")
     
-    print("\n✓ Agent初始化完成\n")
+    print("\n✓ Agent initialization completed\n")
 
 
 def test_parameter_parsing():
     """Test parameter parsing"""
     print("=" * 60)
-    print("测试4: 参数解析")
+    print("Test 4: Parameter Parsing")
     print("=" * 60)
     
     calculator = SteelStrengthCalculator()
@@ -130,7 +130,7 @@ def test_parameter_parsing():
         },
         {
             'name': 'Chinese parameters',
-            'params': {'Cross-sectional area': 10, 'I': 100, 'c': 5, 'Length': 120, 'fy': 50, 'Initial imperfection': 0.1}
+            'params': {'cross_sectional_area': 10, 'I': 100, 'c': 5, 'length': 120, 'fy': 50, 'initial_imperfection': 0.1}
         },
         {
             'name': 'English full names',
@@ -143,7 +143,7 @@ def test_parameter_parsing():
     ]
     
     for case in test_cases:
-        print(f"\n测试: {case['name']}")
+        print(f"\nTest: {case['name']}")
         result = calculator._parse_column_params(case['params'])
         if 'error' in result:
             print(f"  ✗ {result['error']}")
@@ -155,15 +155,15 @@ def test_parameter_parsing():
 
 
 def test_multiple_columns():
-    """测试多个钢柱Calculate"""
+    """Test batch calculation of multiple steel columns"""
     print("=" * 60)
-    print("测试5: 批量Calculate多个钢柱")
+    print("Test 5: Batch Calculate Multiple Steel Columns")
     print("=" * 60)
     
     model_path = os.path.join(os.path.dirname(os.path.dirname(__file__)), 
                               "PINN model/normal/model_20250123_165719.pth")
     if not os.path.exists(model_path):
-        print(f"⚠ Model file does not exist，Skip this test\n")
+        print(f"⚠ Model file does not exist, skip this test\n")
         return
     
     calculator = SteelStrengthCalculator(model_path=model_path)
@@ -189,16 +189,16 @@ def test_multiple_columns():
             print(f"  Theoretical strength: {result['theoretical_strength']:.2f} kip")
             print(f"  Ratio: {result['prediction_ratio']:.3f}")
         else:
-            print(f"\n{name}: CalculateFailed - {result['error']}")
+            print(f"\n{name}: Calculation failed - {result['error']}")
     
-    print("\n✓ 批量Calculate测试完成\n")
+    print("\n✓ Batch calculation test completed\n")
 
 
 def main():
     """Run all tests"""
     print("\n")
     print("╔" + "═" * 58 + "╗")
-    print("║" + " " * 10 + "钢结构设计Agent - 功能测试" + " " * 18 + "║")
+    print("║" + " " * 10 + "Steel Structure Design Agent - Functionality Test" + " " * 0 + "║")
     print("╚" + "═" * 58 + "╝")
     print("\n")
     
@@ -210,9 +210,9 @@ def main():
         test_multiple_columns()
         
         print("=" * 60)
-        print("All tests completed！")
+        print("All tests completed!")
         print("=" * 60)
-        print("\nTip: To test complete LLM dialogue functionality，Please run: python agent.py")
+        print("\nTip: To test complete LLM dialogue functionality, please run: python agent.py")
         print()
         
     except Exception as e:

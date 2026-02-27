@@ -21,7 +21,7 @@ PINN_OUTPUT_DIM = 1
 STEEL_ELASTIC_MODULUS = 29000  # ksi
 LOG_SHIFT = 0.01  # Logarithmic transformation offset
 
-# Parameter range（For validation）
+# Parameter range (for validation)
 PARAM_RANGES = {
     'A': (0.1, 100.0),      # in²
     'I': (1.0, 1000.0),     # in⁴
@@ -34,6 +34,6 @@ PARAM_RANGES = {
 # Tool description
 TOOLS_DESCRIPTION = {
     'calculate_column_strength': 'Calculate steel column compressive strength',
-    'calculate_beam_strength': 'Calculate steel beam flexural strength（开发中）'
+    'calculate_beam_strength': 'Calculate steel beam flexural strength (under development)'
 }
 
