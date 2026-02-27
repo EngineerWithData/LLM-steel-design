@@ -11,6 +11,21 @@ from models.pinn_predictor import PINNPredictor
 from typing import Dict, Any, List
 import json
 
+# Import building design modules
+try:
+    sys.path.append(os.path.dirname(os.path.dirname(os.path.dirname(os.path.abspath(__file__)))))
+    from building_design import (
+        parse_building_description,
+        generate_blueprint,
+        calculate_all_column_loads,
+        optimize_column_section,
+        generate_column_design_report
+    )
+    BUILDING_DESIGN_AVAILABLE = True
+except ImportError:
+    BUILDING_DESIGN_AVAILABLE = False
+    print("Warning: Building design module not available")
+
 
 class SteelStrengthCalculator:
     """Steel Component Strength Calculator Tool Class"""
@@ -137,14 +152,98 @@ class SteelStrengthCalculator:
         except Exception as e:
             return {'error': f'Parameter parsing failed: {str(e)}'}
     
+    def design_building(self, params: Dict[str, Any]) -> Dict[str, Any]:
+        """
+        Design complete building from natural language description
+        
+        Args:
+            params: Building design parameters
+                - description: Natural language building description
+                - dead_load_psf: Dead load in psf (default: 50)
+                - live_load_psf: Live load in psf (default: 40)
+                - num_floors: Number of floors (default: 1)
+                - output_file: Blueprint output filename (optional)
+        
+        Returns:
+            Complete design report including layout, blueprint, and column analysis
+        """
+        if not BUILDING_DESIGN_AVAILABLE:
+            return {
+                'success': False,
+                'error': 'Building design module not available. Please install required dependencies.'
+            }
+        
+        try:
+            description = params.get('description', '')
+            if not description:
+                return {
+                    'success': False,
+                    'error': 'Building description is required'
+                }
+            
+            dead_load_psf = params.get('dead_load_psf', 50)
+            live_load_psf = params.get('live_load_psf', 40)
+            num_floors = params.get('num_floors', 1)
+            output_file = params.get('output_file', 'output/blueprint.svg')
+            
+            # Step 1: Parse building description
+            from openai import OpenAI
+            from dotenv import load_dotenv
+            load_dotenv()
+            
+            api_key = os.getenv('DASHSCOPE_API_KEY') or os.getenv('OPENAI_API_KEY')
+            base_url = os.getenv('LLM_BASE_URL', 'https://dashscope.aliyuncs.com/compatible-mode/v1')
+            client = OpenAI(api_key=api_key, base_url=base_url)
+            
+            blueprint_params = parse_building_description(description, client)
+            
+            # Step 2: Generate blueprint
+            os.makedirs(os.path.dirname(output_file) if os.path.dirname(output_file) else 'output', exist_ok=True)
+            generate_blueprint(blueprint_params, output_file)
+            
+            # Step 3: Analyze columns
+            column_report = generate_column_design_report(
+                blueprint_params,
+                dead_load_psf,
+                live_load_psf,
+                num_floors
+            )
+            
+            return {
+                'success': True,
+                'building_description': description,
+                'blueprint_file': output_file,
+                'num_rooms': len(blueprint_params.get('rooms', [])),
+                'num_columns': column_report['summary']['total_columns'],
+                'total_load': column_report['summary']['total_load'],
+                'total_steel_weight': column_report['summary']['total_steel_weight'],
+                'column_designs': column_report['column_designs'],
+                'warnings': column_report.get('warnings', []),
+                'message': f'Building design completed. Blueprint saved to {output_file}'
+            }
+            
+        except Exception as e:
+            return {
+                'success': False,
+                'error': f'Building design failed: {str(e)}'
+            }
+    
     def get_tool_description(self) -> str:
         """Get tool description (for LLM understanding)"""
-        return """
+        building_tools = ""
+        if BUILDING_DESIGN_AVAILABLE:
+            building_tools = """
+3. Design complete building from description (design_building)
+   - Input: Natural language building description
+   - Output: Building layout, 3D blueprint, column analysis
+"""
+        
+        return f"""
 Steel Component Strength Calculation Tools
 
 Features:
 1. Calculate steel column compressive strength (calculate_column_strength)
-2. Calculate steel beam flexural strength (calculate_beam_strength) - Under development
+2. Calculate steel beam flexural strength (calculate_beam_strength) - Under development{building_tools}
 
 Steel column parameter description:
 - A (area): Cross-sectional area, unit in²
@@ -160,14 +259,14 @@ Return result:
 - prediction_ratio: Ratio of predicted to theoretical value
 
 Example call:
-{
+{{
     "A": 10.0,
     "I": 100.0,
     "c": 5.0,
     "L": 120.0,
     "fy": 50.0,
     "delta_o": 0.1
-}
+}}
 """
 
 
@@ -224,6 +323,39 @@ STEEL_STRENGTH_TOOLS = [
                     }
                 },
                 "required": ["section"]
+            }
+        }
+    },
+    {
+        "type": "function",
+        "function": {
+            "name": "design_building",
+            "description": "Design a complete building from natural language description. Generates room layout, 3D blueprint visualization, calculates column loads, and recommends steel sections. Perfect for initial building design and structural planning.",
+            "parameters": {
+                "type": "object",
+                "properties": {
+                    "description": {
+                        "type": "string",
+                        "description": "Natural language description of the building. Example: 'I need an office building with 4 rooms, each 20x15 feet, with a corridor connecting all rooms'"
+                    },
+                    "dead_load_psf": {
+                        "type": "number",
+                        "description": "Dead load in pounds per square foot (psf). Typical values: 40-80 psf. Default: 50 psf"
+                    },
+                    "live_load_psf": {
+                        "type": "number",
+                        "description": "Live load in pounds per square foot (psf). Typical values: 40-100 psf (residential: 40, office: 50, classroom: 100). Default: 40 psf"
+                    },
+                    "num_floors": {
+                        "type": "integer",
+                        "description": "Number of floors. Default: 1"
+                    },
+                    "output_file": {
+                        "type": "string",
+                        "description": "Output filename for the blueprint SVG. Default: 'output/blueprint.svg'"
+                    }
+                },
+                "required": ["description"]
             }
         }
     }

@@ -62,11 +62,30 @@ class SteelDesignAgent:
 ## Core Functions
 
 1. **Steel Column Strength Calculation**: Use advanced PINN (Physics-Informed Neural Network) models to calculate the compressive strength of steel columns
-2. **Parameter Explanation**: Help users understand the meaning of various steel structure parameters
-3. **Design Recommendations**: Provide professional design recommendations based on AISC specifications
-4. **Multi-turn Dialogue**: Remember context and conduct coherent multi-turn conversations
+2. **Building Layout Design**: Design complete buildings from natural language descriptions, generate 3D blueprints, analyze column loads, and recommend steel sections
+3. **Parameter Explanation**: Help users understand the meaning of various steel structure parameters
+4. **Design Recommendations**: Provide professional design recommendations based on AISC specifications
+5. **Multi-turn Dialogue**: Remember context and conduct coherent multi-turn conversations
 
 ## Workflow
+
+### When users ask about building design:
+
+1. **Understand Requirements**
+   - Ask about the building type and purpose
+   - Understand room requirements and layout preferences
+   - Clarify load requirements (dead load, live load, number of floors)
+
+2. **Call design_building Tool**
+   - Use the natural language description provided by the user
+   - Set appropriate load values based on building type
+   - Generate complete design including layout, blueprint, and column analysis
+
+3. **Present Results**
+   - Summarize the building layout (number of rooms, total area)
+   - Explain the column design (number of columns, loads, recommended sections)
+   - Mention the blueprint file location
+   - Provide any warnings or recommendations
 
 ### When users ask about steel column strength calculation:
 
@@ -209,6 +228,8 @@ Remember: Your goal is to help users complete steel structure design while keepi
                         function_response = self.calculator.calculate_column_strength(function_args)
                     elif function_name == "calculate_beam_strength":
                         function_response = self.calculator.calculate_beam_strength(function_args)
+                    elif function_name == "design_building":
+                        function_response = self.calculator.design_building(function_args)
                     else:
                         function_response = {"error": "Unknown tool"}
                     
