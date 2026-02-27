@@ -1,21 +1,22 @@
 # LLM Agent Framework for Structural Steel Design
 
-An LLM-powered intelligent agent framework for accelerating and automating structural steel design.
+An LLM-powered intelligent agent framework for accelerating and automating structural steel design with integrated building layout generation and 3D visualization.
 
 ## Project Overview
 
-This project implements an LLM-driven intelligent agent for accelerating and automating structural steel design. The agent integrates pre-trained PINN (Physics-Informed Neural Network) models and can calculate steel component strength through natural language conversations.
+This project implements an LLM-driven intelligent agent for accelerating and automating structural steel design. The agent integrates pre-trained PINN (Physics-Informed Neural Network) models, building layout generation, 3D blueprint visualization, and comprehensive column analysis capabilities.
 
 **Project Information**:
-- **Version**: v1.1.0
+- **Version**: v2.0.0
 - **Developer**: Kai Chen (kchen137@alumni.jh.edu)
 - **Institution**: Johns Hopkins University
-- **Completion Date**: February 26, 2026
+- **Last Updated**: February 27, 2026
 
 ## Main Features
 
 ### ✅ Implemented Features
 
+#### Core Steel Design Features
 - **Steel Column Strength Calculation** (Task 3.2): Calculate steel column compressive strength using PINN models
 - **Natural Language Interaction**: Interact with users through chat
 - **Multi-turn Dialogue**: Support coherent multi-turn conversations with context memory
@@ -24,6 +25,14 @@ This project implements an LLM-driven intelligent agent for accelerating and aut
 - **Unrelated Question Handling**: Handle questions unrelated to steel structure design while keeping conversations natural
 - **Tool Invocation**: LLM automatically calls backend calculation models
 - **Multi-API Support**: Support for OpenAI and Alibaba Cloud DashScope APIs
+
+#### NEW: Integrated Building Design Features (v2.0.0)
+- **🏗️ Natural Language Building Layout**: Describe buildings in plain language, automatically generate room layouts
+- **📐 3D Blueprint Visualization**: Generate perspective SVG blueprints with columns, beams, and connections
+- **⚖️ Column Load Analysis**: Automatically calculate tributary areas and loads for all columns
+- **🔧 Section Optimization**: Recommend optimal steel sections (W-shapes) based on load requirements
+- **📊 Comprehensive Design Reports**: Generate detailed JSON reports with all design data
+- **🔄 Integrated Workflow**: Seamless integration from building description to steel member design
 
 ### 🚧 Features Under Development
 
@@ -55,26 +64,51 @@ LLM_MODEL=qwen-max
 # LLM_MODEL=gpt-4-turbo-preview
 ```
 
-### 3. Start Agent
+### 3. Choose Your Workflow
 
-**Method 1: Use startup script (Recommended)**
+#### Option A: Steel Column Strength Calculation (Basic)
+
+**Start the agent:**
 ```bash
 ./start_agent.sh  # Linux/Mac
 start_agent.bat   # Windows
 ```
 
-**Method 2: Run directly**
-```bash
-cd agent
-python agent.py
-```
-
-### 4. Start Conversation
-
+**Start conversation:**
 ```
 User: I want to calculate steel column strength
 Agent: [Automatically calls PINN model and returns results]
 ```
+
+#### Option B: Integrated Building Design (NEW!)
+
+**Start the integrated system:**
+```bash
+python integrated_design.py --mode interactive
+```
+
+**Design a complete building:**
+```
+Command: design
+
+Describe your building: I need an office building with 4 rooms, 
+each 20x15 feet, with a corridor connecting all rooms
+
+Dead load (psf) [default: 50]: 60
+Live load (psf) [default: 40]: 50
+Number of floors [default: 1]: 2
+
+[System generates layout, blueprint, analyzes columns, and calculates strengths]
+
+✓ Blueprint saved to: output/blueprint.svg
+✓ Design report saved to: output/design_report.json
+```
+
+### 4. View Documentation
+
+For detailed instructions, see:
+- **Chinese Guide**: [USER_GUIDE_CN.md](USER_GUIDE_CN.md)
+- **English Guide**: [USER_GUIDE_EN.md](USER_GUIDE_EN.md)
 
 ## Usage Examples
 
@@ -208,15 +242,31 @@ LLM_steel_design/
 │   │   └── steel_strength_tools.py # Steel component strength calculation tools
 │   └── utils/
 │       └── create_scalers.py      # Scaler generation tool
-├── tests/
-│   └── test_agent.py               # Functional tests
+├── building_design/                # NEW: Building design module
+│   ├── __init__.py                 # Module initialization
+│   ├── building_parser.py          # Natural language building parser
+│   ├── blueprint_generator.py      # 3D blueprint SVG generator
+│   └── column_analyzer.py          # Column load analysis and optimization
+├── integrated_design.py            # NEW: Integrated design system
+├── tests/                          # Test suite
+│   ├── test_agent.py               # Agent tests
+│   ├── test_llm_agent.py           # LLM integration tests
+│   ├── test_steel_tools.py         # Steel tools tests
+│   ├── test_pinn_model.py          # PINN model tests
+│   └── test_integration.py         # Integration tests
 ├── examples/
-│   └── usage_examples.py           # Usage examples
+│   ├── usage_examples.py           # Usage examples
+│   └── multi_turn_demo.py          # Multi-turn dialogue demo
 ├── PINN model/
 │   └── normal/
 │       ├── model_20250123_165719.pth  # Pre-trained model
 │       └── scalers.pkl                # Scaler
+├── output/                         # NEW: Generated files directory
+│   ├── blueprint.svg               # Generated blueprints
+│   └── design_report.json          # Design reports
 ├── README.md                       # This document
+├── USER_GUIDE_CN.md                # NEW: Chinese user guide
+├── USER_GUIDE_EN.md                # NEW: English user guide
 ├── requirements.txt                # Python dependencies
 ├── env.example                     # Environment variable template
 ├── start_agent.sh                  # Linux/Mac startup script
@@ -418,6 +468,7 @@ matplotlib>=3.7.0
 seaborn>=0.12.0
 openai>=1.0.0
 python-dotenv>=1.0.0
+svgwrite>=1.4.0          # NEW: For blueprint generation
 ```
 
 ## Development Team
@@ -448,6 +499,6 @@ For questions or suggestions, please contact:
 
 ---
 
-**Version**: v1.1.0  
-**Last Updated**: February 26, 2026  
-**Status**: ✅ Task 3.2 Completed
+**Version**: v2.0.0  
+**Last Updated**: February 27, 2026  
+**Status**: ✅ Task 3.2 Completed | ✅ Building Design Integration Completed
