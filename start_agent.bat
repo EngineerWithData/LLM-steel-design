@@ -52,6 +52,5 @@ REM Start Agent
 echo.
 echo Starting Agent...
 echo.
-cd agent
-python agent.py
+python -m agent.agent
 pause

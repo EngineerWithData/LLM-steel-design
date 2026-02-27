@@ -51,5 +51,4 @@ fi
 echo ""
 echo "Starting Agent..."
 echo ""
-cd agent
-python3 agent.py
+python3 -m agent.agent
