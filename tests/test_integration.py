@@ -1,5 +1,5 @@
 """
-集成测试 - 测试完整的工作流程
+Integration tests - Test complete workflows
 """
 
 import sys
@@ -13,11 +13,11 @@ from agent.models import PINNPredictor
 
 
 class TestIntegration:
-    """集成测试类"""
+    """Integration test class"""
     
     @pytest.fixture
     def model_path(self):
-        """获取模型路径"""
+        """Get model path"""
         path = os.path.join(
             os.path.dirname(os.path.dirname(__file__)),
             "PINN model/normal/model_20250123_165719.pth"
@@ -27,11 +27,11 @@ class TestIntegration:
         return path
     
     def test_end_to_end_column_design(self, model_path):
-        """测试端到端的钢柱设计流程"""
-        # 1. 创建Agent
+        """Test end-to-end steel column design workflow"""
+        # 1. Create Agent
         agent = SteelDesignAgent(model_path=model_path)
         
-        # 2. 定义设计参数
+        # 2. Define design parameters
         params = {
             'A': 10.0,
             'I': 100.0,
@@ -41,49 +41,49 @@ class TestIntegration:
             'delta_o': 0.1
         }
         
-        # 3. 使用Calculate器Calculate
+        # 3. Calculate using calculator
         result = agent.calculator.calculate_column_strength(params)
         
-        # 4. 验证结果
+        # 4. Verify results
         assert result['success'] == True
         assert result['nominal_strength_Pn'] > 0
         assert result['theoretical_strength'] > 0
         assert result['prediction_ratio'] > 0
     
     def test_multiple_design_scenarios(self, model_path):
-        """测试多个设计场景"""
+        """Test multiple design scenarios"""
         calculator = SteelStrengthCalculator(model_path=model_path)
         
-        # 场景1: Short column
+        # Scenario 1: Short column
         short_column = {
             'A': 15.0, 'I': 150.0, 'c': 6.0,
             'L': 100.0, 'fy': 50.0, 'delta_o': 0.1
         }
         
-        # 场景2: Medium column
+        # Scenario 2: Medium column
         medium_column = {
             'A': 10.0, 'I': 100.0, 'c': 5.0,
             'L': 150.0, 'fy': 50.0, 'delta_o': 0.1
         }
         
-        # 场景3: Long column
+        # Scenario 3: Long column
         long_column = {
             'A': 8.0, 'I': 80.0, 'c': 4.0,
             'L': 200.0, 'fy': 50.0, 'delta_o': 0.1
         }
         
-        # Calculate所有场景
+        # Calculate all scenarios
         results = []
         for params in [short_column, medium_column, long_column]:
             result = calculator.calculate_column_strength(params)
             assert result['success'] == True
             results.append(result['nominal_strength_Pn'])
         
-        # 验证趋势：Short column > Medium column > Long column
+        # Verify trend: Short column > Medium column > Long column
         assert results[0] > results[1] > results[2]
     
     def test_parametric_study_length(self, model_path):
-        """测试参数化研究：Length影响"""
+        """Test parametric study: Length effect"""
         calculator = SteelStrengthCalculator(model_path=model_path)
         
         base_params = {
@@ -102,13 +102,13 @@ class TestIntegration:
             if result['success']:
                 strengths.append(result['nominal_strength_Pn'])
         
-        # 验证强度随Length增加而单调递减
+        # Verify strength decreases monotonically with increasing length
         assert len(strengths) == len(lengths)
         for i in range(len(strengths) - 1):
-            assert strengths[i] > strengths[i + 1], f"强度应该递减: {strengths[i]} > {strengths[i+1]}"
+            assert strengths[i] > strengths[i + 1], f"Strength should decrease: {strengths[i]} > {strengths[i+1]}"
     
     def test_parametric_study_yield_strength(self, model_path):
-        """测试参数化研究：Yield strength影响"""
+        """Test parametric study: Yield strength effect"""
         calculator = SteelStrengthCalculator(model_path=model_path)
         
         base_params = {
@@ -127,13 +127,13 @@ class TestIntegration:
             if result['success']:
                 strengths.append(result['nominal_strength_Pn'])
         
-        # 验证强度随Yield strength增加而单调递增
+        # Verify strength increases monotonically with increasing yield strength
         assert len(strengths) == len(fy_values)
         for i in range(len(strengths) - 1):
-            assert strengths[i] < strengths[i + 1], f"强度应该递增: {strengths[i]} < {strengths[i+1]}"
+            assert strengths[i] < strengths[i + 1], f"Strength should increase: {strengths[i]} < {strengths[i+1]}"
     
     def test_comparison_with_theory(self, model_path):
-        """测试PINN预测与理论值的对比"""
+        """Test PINN prediction vs theoretical values"""
         calculator = SteelStrengthCalculator(model_path=model_path)
         
         test_cases = [
@@ -147,26 +147,26 @@ class TestIntegration:
             
             assert result['success'] == True
             
-            # 预测值和理论值都应该是正数
+            # Predicted and theoretical values should both be positive
             assert result['nominal_strength_Pn'] > 0
             assert result['theoretical_strength'] > 0
             
-            # Ratio应该在合理范围内（0.5 - 2.0）
+            # Ratio should be within reasonable range (0.5 - 2.0)
             ratio = result['prediction_ratio']
-            assert 0.5 < ratio < 2.0, f"Ratio应该在合理范围: {ratio}"
+            assert 0.5 < ratio < 2.0, f"Ratio should be in reasonable range: {ratio}"
     
     def test_model_predictor_integration(self, model_path):
-        """测试模型预测器集成"""
-        # 创建预测器
+        """Test model predictor integration"""
+        # Create predictor
         predictor = PINNPredictor(model_path=model_path)
         
-        # 测试参数
+        # Test parameters
         params = {
             'A': 10.0, 'I': 100.0, 'c': 5.0,
             'L': 120.0, 'fy': 50.0, 'delta_o': 0.1
         }
         
-        # 预测
+        # Predict
         result = predictor.predict(params)
         
         assert result['status'] == 'success'
@@ -174,23 +174,23 @@ class TestIntegration:
         assert result['Pn_theory'] > 0
     
     def test_error_handling_chain(self):
-        """测试Error处理链"""
-        calculator = SteelStrengthCalculator()  # Do not load model
+        """Test error handling chain"""
+        calculator = SteelStrengthCalculator()  # Without loading model
         
-        # 测试1: 没有模型
+        # Test 1: No model
         result = calculator.calculate_column_strength({
             'A': 10.0, 'I': 100.0, 'c': 5.0,
             'L': 120.0, 'fy': 50.0, 'delta_o': 0.1
         })
         assert result['success'] == False
         
-        # 测试2: Missing parameters
+        # Test 2: Missing parameters
         result = calculator.calculate_column_strength({
             'A': 10.0, 'I': 100.0
         })
         assert result['success'] == False
         
-        # 测试3: 无效参数
+        # Test 3: Invalid parameters
         result = calculator.calculate_column_strength({
             'A': -10.0, 'I': 100.0, 'c': 5.0,
             'L': 120.0, 'fy': 50.0, 'delta_o': 0.1
@@ -199,11 +199,11 @@ class TestIntegration:
 
 
 class TestRealWorldScenarios:
-    """真实世界场景测试"""
+    """Real world scenario tests"""
     
     @pytest.fixture
     def model_path(self):
-        """获取模型路径"""
+        """Get model path"""
         path = os.path.join(
             os.path.dirname(os.path.dirname(__file__)),
             "PINN model/normal/model_20250123_165719.pth"
@@ -213,16 +213,16 @@ class TestRealWorldScenarios:
         return path
     
     def test_w_section_column(self, model_path):
-        """测试W型钢柱（基于AISC手册）"""
+        """Test W-section column (based on AISC manual)"""
         calculator = SteelStrengthCalculator(model_path=model_path)
         
-        # W8x31截面参数（近似）
+        # W8x31 section parameters (approximate)
         params = {
             'A': 9.13,      # in²
             'I': 110.0,     # in⁴
             'c': 4.0,       # in
             'L': 120.0,     # 10 ft
-            'fy': 50.0,     # ksi (A992钢)
+            'fy': 50.0,     # ksi (A992 steel)
             'delta_o': 0.1  # in
         }
         
@@ -231,12 +231,12 @@ class TestRealWorldScenarios:
         assert result['success'] == True
         assert result['nominal_strength_Pn'] > 0
         
-        # 粗略验证：强度应该在合理范围内
-        # W8x31的Theoretical strength大约在200-500 kip范围
+        # Rough verification: strength should be in reasonable range
+        # W8x31 theoretical strength approximately in 200-500 kip range
         assert 100 < result['nominal_strength_Pn'] < 1000
     
     def test_different_steel_grades(self, model_path):
-        """测试不同钢材等级"""
+        """Test different steel grades"""
         calculator = SteelStrengthCalculator(model_path=model_path)
         
         base_params = {
@@ -244,7 +244,7 @@ class TestRealWorldScenarios:
             'L': 120.0, 'delta_o': 0.1
         }
         
-        # 不同钢材等级
+        # Different steel grades
         steel_grades = {
             'A36': 36.0,
             'A572 Gr.50': 50.0,
@@ -261,21 +261,21 @@ class TestRealWorldScenarios:
             if result['success']:
                 results[grade] = result['nominal_strength_Pn']
         
-        # 验证高强度钢材有更高的承载力
+        # Verify higher strength steel has higher capacity
         assert results['A36'] < results['A572 Gr.50']
         assert results['A572 Gr.50'] < results['A913 Gr.65']
     
     def test_slenderness_effect(self, model_path):
-        """测试细长比效应"""
+        """Test slenderness ratio effect"""
         calculator = SteelStrengthCalculator(model_path=model_path)
         
-        # 固定截面，改变Length
+        # Fixed section, vary length
         base_params = {
             'A': 10.0, 'I': 100.0, 'c': 5.0,
             'fy': 50.0, 'delta_o': 0.1
         }
         
-        # Short column、Medium column、Long column
+        # Short column, Medium column, Long column
         lengths = {
             'Short column': 60.0,
             'Medium column': 120.0,
@@ -291,13 +291,12 @@ class TestRealWorldScenarios:
             if result['success']:
                 results[name] = result['nominal_strength_Pn']
         
-        # 验证细长比效应
+        # Verify slenderness effect
         assert results['Short column'] > results['Medium column'] > results['Long column']
         
-        # Long column的强度应该低于Short column（放宽阈值）
+        # Long column strength should be less than short column (relaxed threshold)
         assert results['Long column'] < results['Short column'] * 0.98
 
 
 if __name__ == "__main__":
     pytest.main([__file__, "-v"])
-

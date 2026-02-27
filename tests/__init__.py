@@ -1,6 +1,5 @@
 """
-测试套件初始化文件
+Test suite initialization file
 """
 
 __version__ = "1.0.0"
-
