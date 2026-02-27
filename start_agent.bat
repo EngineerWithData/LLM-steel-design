@@ -1,58 +1,57 @@
 @echo off
-REM 钢结构设计Agent启动脚本 (Windows)
+REM Steel Structure Design Agent Startup Script (Windows)
 
 echo ======================================
-echo   钢结构设计LLM Agent
+echo   Steel Structure Design LLM Agent
 echo ======================================
 echo.
 
-REM 检查Python
+REM Check Python
 python --version >nul 2>&1
 if errorlevel 1 (
-    echo 错误: 未找到Python
+    echo Error: Python not found
     pause
     exit /b 1
 )
 
-REM 检查.env文件
+REM Check .env file
 if not exist ".env" (
-    echo 警告: 未找到.env文件
+    echo Warning: .env file not found
     if exist "env.example" (
-        echo 正在从env.example创建.env...
+        echo Creating .env from env.example...
         copy env.example .env
-        echo 已创建.env文件，请编辑并填入你的API密钥
+        echo .env file created, please edit and fill in your API key
         echo.
         pause
     ) else (
-        echo 错误: env.example文件不存在
+        echo Error: env.example file does not exist
         pause
         exit /b 1
     )
 )
 
-REM 检查依赖
-echo 检查依赖...
+REM Check dependencies
+echo Checking dependencies...
 python -c "import openai" 2>nul
 if errorlevel 1 (
-    echo 警告: 缺少依赖包
-    set /p install="是否安装依赖? (y/n): "
+    echo Warning: Missing dependency packages
+    set /p install="Install dependencies? (y/n): "
     if /i "%install%"=="y" (
         pip install -r requirements.txt
     )
 )
 
-REM 检查模型文件
+REM Check model file
 if not exist "PINN model\normal\model_20250123_165719.pth" (
-    echo 警告: 未找到PINN模型文件
-    echo 路径: PINN model\normal\model_20250123_165719.pth
+    echo Warning: PINN model file not found
+    echo Path: PINN model\normal\model_20250123_165719.pth
     echo.
 )
 
-REM 启动Agent
+REM Start Agent
 echo.
-echo 启动Agent...
+echo Starting Agent...
 echo.
 cd agent
 python agent.py
 pause
-
