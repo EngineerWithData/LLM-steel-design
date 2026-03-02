@@ -320,7 +320,10 @@ class CompleteIntegratedSystem:
         print("=" * 70)
         print("\nCommands:")
         print("  'design' - Complete design workflow (3.1 → 3.3 → 3.2)")
+        print("  'example' - Show usage examples")
         print("  'quit' - Exit")
+        print("-" * 70)
+        print("\n💡 Tip: Type 'example' to see sample building descriptions")
         print("-" * 70)
 
         while True:
@@ -331,8 +334,43 @@ class CompleteIntegratedSystem:
                     print("Goodbye!")
                     break
 
+                elif command == 'example':
+                    print("\n" + "=" * 70)
+                    print("USAGE EXAMPLES")
+                    print("=" * 70)
+                    print("\n📋 Example 1: Simple Office Building")
+                    print("   Description: 'A 2-story office building with 4 rooms per floor,")
+                    print("                each room 20x15 feet with central corridor'")
+                    print("   Dead load: 50 psf")
+                    print("   Live load: 40 psf")
+                    print("   Floors: 2")
+                    print()
+                    print("📋 Example 2: Warehouse")
+                    print("   Description: 'Simple warehouse 60x40 feet with columns every 20 feet'")
+                    print("   Dead load: 30 psf (lighter roof)")
+                    print("   Live load: 20 psf")
+                    print("   Floors: 1")
+                    print()
+                    print("📋 Example 3: Residential Building")
+                    print("   Description: 'Three-story apartment building, 6 units, each 25x18 feet'")
+                    print("   Dead load: 60 psf")
+                    print("   Live load: 50 psf")
+                    print("   Floors: 3")
+                    print()
+                    print("💡 Tips:")
+                    print("   • Describe room sizes, layout, and number of floors")
+                    print("   • Mention if you want specific column spacing")
+                    print("   • System will automatically select steel sections (W-shapes)")
+                    print("   • Results include: blueprint, analysis, and strength verification")
+                    print("=" * 70)
+
                 elif command == 'design':
                     print("\n--- Complete Design Workflow ---")
+                    print("\n📝 Example building descriptions:")
+                    print("  • 'A 2-story office building with 4 rooms per floor, each 20x15 feet'")
+                    print("  • 'Simple warehouse 50x30 feet with columns every 10 feet'")
+                    print("  • 'Three-story residential building with 6 apartments'")
+                    print()
                     description = input("Describe your building: ").strip()
 
                     if not description:
