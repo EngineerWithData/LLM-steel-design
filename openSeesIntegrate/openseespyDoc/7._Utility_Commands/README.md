@@ -1,0 +1,35 @@
+# 7. Utility Commands
+
+# 7. Utility Commands
+
+These commands are used to monitor and change the state of the model.
+
+1. [convertBinaryToText command](convertBinaryToText.html)
+2. [convertTextToBinary command](convertTextToBinary.html)
+3. [database command](database.html)
+4. [InitialStateAnalysis command](InitialStateAnalysis.html)
+5. [loadConst command](loadConst.html)
+6. [modalDamping command](modalDamping.html)
+7. [reactions command](reactions.html)
+8. [remove command](remove.html)
+9. [reset command](reset.html)
+10. [restore command](restore.html)
+11. [save command](save.html)
+12. [sdfResponse command](sdfResponse.html)
+13. [setTime command](setTime.html)
+14. [setNodeCoord command](setNodeCoord.html)
+15. [setNodeDisp command](setNodeDisp.html)
+16. [setNodeVel command](setNodeVel.html)
+17. [setNodeAccel command](setNodeAccel.html)
+18. [setPrecision command](setPrecision.html)
+19. [setElementRayleighDampingFactors command](setElementRayleighDampingFactors.html)
+20. [setNodeTemperature command](setNodeTemperature.html)
+21. [start command](start.html)
+22. [stop command](stop.html)
+23. [stripXML command](stripXML.html)
+24. [updateElementDomain command](updateElementDomain.html)
+25. [updateMaterialStage](updateMaterialStage.html)
+26. [wipe command](wipe.html)
+27. [wipeAnalysis command](wipeAnalysis.html)
+28. [setNumthread command](setNumThread.html)
+29. [getNumthread command](getNumThreads.html)
