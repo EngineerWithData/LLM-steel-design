@@ -132,9 +132,7 @@ Agent: [Automatically calls PINN model and returns results]
 
 ### 4. View Documentation
 
-For detailed technical information, see:
-- **Implementation Plan**: `openSeesIntegrate/IMPLEMENTATION_PLAN.md` - Technical design details
-- **Final Report**: `openSeesIntegrate/FINAL_REPORT.md` - Project achievements and statistics
+All documentation is integrated in this README. For code-level details, refer to the docstrings in the source code.
 
 ## Usage Examples
 
@@ -273,7 +271,7 @@ LLM_steel_design/
 │   ├── building_parser.py          # Natural language building parser
 │   ├── blueprint_generator.py      # 3D blueprint SVG generator
 │   └── column_analyzer.py          # Column load analysis and optimization
-├── openSeesIntegrate/              # NEW: Structural analysis module (Task 3.3)
+├── openSeesIntegrate/              # Structural analysis module (Task 3.3)
 │   ├── agents/                     # Multi-agent system
 │   │   ├── geometry_agent.py       # Natural language → JSON
 │   │   ├── code_translator.py      # JSON → OpenSeesPy code
@@ -285,10 +283,8 @@ LLM_steel_design/
 │   │   ├── opensees_runner.py      # OpenSeesPy executor
 │   │   └── result_parser.py        # Result parser and interpreter
 │   ├── opensees_integration.py     # Complete integration system
-│   ├── openseespyDoc/              # OpenSeesPy documentation (468 files)
-│   ├── IMPLEMENTATION_PLAN.md      # Technical design document
-│   └── FINAL_REPORT.md             # Final achievement report
-├── integrated_design_v3.py         # NEW: Complete system integration (v3.0)
+│   └── openseespyDoc/              # OpenSeesPy documentation (468 files)
+├── integrated_design_v3.py         # Complete system integration (v3.0)
 ├── examples/
 │   └── examples_quickstart.py      # NEW: Quick start examples
 ├── tests/                          # Test suite
