@@ -15,7 +15,8 @@ from dotenv import load_dotenv
 from building_design import (
     parse_building_description,
     generate_blueprint,
-    generate_column_design_report
+    calculate_all_column_loads,
+    optimize_column_section
 )
 
 # Task 3.2: Steel Strength Calculation
