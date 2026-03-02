@@ -80,7 +80,7 @@ LLM_MODEL=qwen-max
 
 **Start the complete workflow with all three tasks integrated:**
 ```bash
-python integrated_design_v3.py --mode interactive
+python integrated_design.py --mode interactive
 ```
 
 **Complete design from natural language:**
@@ -284,7 +284,7 @@ LLM_steel_design/
 │   │   └── result_parser.py        # Result parser and interpreter
 │   ├── opensees_integration.py     # Complete integration system
 │   └── openseespyDoc/              # OpenSeesPy documentation (468 files)
-├── integrated_design_v3.py         # Complete system integration (v3.0)
+├── integrated_design.py            # Complete system integration
 ├── examples/
 │   └── examples_quickstart.py      # NEW: Quick start examples
 ├── tests/                          # Test suite
