@@ -53,36 +53,9 @@ if [ ! -f "PINN model/normal/model_20250123_165719.pth" ]; then
     echo ""
 fi
 
-# Display menu
+# Start Complete System
 echo ""
-echo "========================================================="
-echo "Select mode:"
-echo "  1) Complete Integrated System (Recommended)"
-echo "  2) Steel Strength Calculation Only (Task 3.2)"
-echo "  3) Exit"
-echo "========================================================="
-read -p "Enter your choice (1-3): " choice
-
-case $choice in
-    1)
-        echo ""
-        echo "Starting Complete Integrated System..."
-        echo "This includes all three tasks: Building Design, Analysis, and Strength Verification"
-        echo ""
-        python3 integrated_design.py --mode interactive
-        ;;
-    2)
-        echo ""
-        echo "Starting Steel Strength Calculator (Task 3.2 only)..."
-        echo ""
-        python3 -m agent.agent
-        ;;
-    3)
-        echo "Exiting..."
-        exit 0
-        ;;
-    *)
-        echo "Invalid choice. Exiting..."
-        exit 1
-        ;;
-esac
+echo "Starting Complete Integrated System..."
+echo "This includes all three tasks: Building Design, Structural Analysis, and Strength Verification"
+echo ""
+python3 integrated_design.py --mode interactive

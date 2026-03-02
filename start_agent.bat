@@ -54,34 +54,10 @@ if not exist "PINN model\normal\model_20250123_165719.pth" (
     echo.
 )
 
-REM Display menu
+REM Start Complete System
 echo.
-echo =========================================================
-echo Select mode:
-echo   1) Complete Integrated System (Recommended)
-echo   2) Steel Strength Calculation Only (Task 3.2)
-echo   3) Exit
-echo =========================================================
-set /p choice="Enter your choice (1-3): "
-
-if "%choice%"=="1" (
-    echo.
-    echo Starting Complete Integrated System...
-    echo This includes all three tasks: Building Design, Analysis, and Strength Verification
-    echo.
-    python integrated_design.py --mode interactive
-    pause
-) else if "%choice%"=="2" (
-    echo.
-    echo Starting Steel Strength Calculator (Task 3.2 only)...
-    echo.
-    python -m agent.agent
-    pause
-) else if "%choice%"=="3" (
-    echo Exiting...
-    exit /b 0
-) else (
-    echo Invalid choice. Exiting...
-    pause
-    exit /b 1
-)
+echo Starting Complete Integrated System...
+echo This includes all three tasks: Building Design, Structural Analysis, and Strength Verification
+echo.
+python integrated_design.py --mode interactive
+pause

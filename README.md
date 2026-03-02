@@ -88,14 +88,11 @@ LLM_MODEL=qwen-max
 start_agent.bat
 ```
 
-**Interactive Menu:**
-```
-Select mode:
-  1) Complete Integrated System (Recommended)
-     - All three tasks: Building Design + Analysis + Strength
-  2) Steel Strength Calculation Only (Task 3.2)
-  3) Exit
-```
+These scripts will:
+- Check all dependencies (openai, pydantic, torch)
+- Verify .env configuration
+- Launch the complete integrated system automatically
+- No menu needed - starts full system by default
 
 #### Option B: Direct Python Command
 
