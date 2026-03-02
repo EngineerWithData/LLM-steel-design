@@ -54,18 +54,20 @@ if not exist "PINN model\normal\model_20250123_165719.pth" (
     echo.
 )
 
-REM Start Complete System
+REM Start Agent System
 echo.
-echo Starting Complete Integrated System...
-echo This includes all three tasks: Building Design, Structural Analysis, and Strength Verification
+echo Starting Steel Design Agent System...
+echo The agent can help you with:
+echo   - Building design and layout generation
+echo   - Structural analysis with OpenSeesPy
+echo   - Steel member strength calculation
 echo.
 echo ================================================================
-echo Quick Start Guide:
-echo    1. Type 'example' to see sample building descriptions
-echo    2. Type 'design' to start your own design
-echo    3. Describe your building naturally:
-echo       Example: 'A 2-story office with 4 rooms per floor'
+echo Example conversations:
+echo    'Design a 2-story office building with 4 rooms'
+echo    'Analyze a portal frame with W14X90 sections'
+echo    'Calculate strength for a steel column'
 echo ================================================================
 echo.
-python integrated_design.py --mode interactive
+python -m agent.agent
 pause

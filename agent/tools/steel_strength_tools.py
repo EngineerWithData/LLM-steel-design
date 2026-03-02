@@ -18,13 +18,20 @@ try:
         parse_building_description,
         generate_blueprint,
         calculate_all_column_loads,
-        optimize_column_section,
-        generate_column_design_report
+        optimize_column_section
     )
     BUILDING_DESIGN_AVAILABLE = True
 except ImportError:
     BUILDING_DESIGN_AVAILABLE = False
     print("Warning: Building design module not available")
+
+# Import OpenSees integration module (Task 3.3)
+try:
+    from openSeesIntegrate.opensees_integration import OpenSeesIntegrationSystem
+    OPENSEES_AVAILABLE = True
+except ImportError:
+    OPENSEES_AVAILABLE = False
+    print("Warning: OpenSees integration module not available")
 
 
 class SteelStrengthCalculator:
@@ -202,23 +209,36 @@ class SteelStrengthCalculator:
             generate_blueprint(blueprint_params, output_file)
             
             # Step 3: Analyze columns
-            column_report = generate_column_design_report(
+            column_loads = calculate_all_column_loads(
                 blueprint_params,
                 dead_load_psf,
                 live_load_psf,
                 num_floors
             )
-            
+
+            # Step 4: Recommend sections for each column
+            column_designs = []
+            total_steel_weight = 0
+            for col_id, load_data in column_loads.items():
+                section = optimize_column_section(load_data['total_load'], load_data['height'] * 12)
+                column_designs.append({
+                    'column_id': col_id,
+                    'location': load_data['location'],
+                    'total_load': load_data['total_load'],
+                    'recommended_section': section['section'],
+                    'properties': section['properties']
+                })
+                total_steel_weight += section['properties']['weight'] * load_data['height']
+
             return {
                 'success': True,
                 'building_description': description,
                 'blueprint_file': output_file,
                 'num_rooms': len(blueprint_params.get('rooms', [])),
-                'num_columns': column_report['summary']['total_columns'],
-                'total_load': column_report['summary']['total_load'],
-                'total_steel_weight': column_report['summary']['total_steel_weight'],
-                'column_designs': column_report['column_designs'],
-                'warnings': column_report.get('warnings', []),
+                'num_columns': len(column_designs),
+                'total_load': sum(d['total_load'] for d in column_designs),
+                'total_steel_weight': total_steel_weight,
+                'column_designs': column_designs,
                 'message': f'Building design completed. Blueprint saved to {output_file}'
             }
             
@@ -226,6 +246,75 @@ class SteelStrengthCalculator:
             return {
                 'success': False,
                 'error': f'Building design failed: {str(e)}'
+            }
+
+    def analyze_structure(self, params: Dict[str, Any]) -> Dict[str, Any]:
+        """
+        Perform automated structural analysis using OpenSeesPy
+
+        Args:
+            params: Analysis parameters
+                - description: Natural language structure description
+                - dead_load_psf: Dead load in psf (default: 50)
+                - live_load_psf: Live load in psf (default: 40)
+                - analysis_type: 'static' or 'modal' (default: 'static')
+
+        Returns:
+            Analysis results including displacements, forces, and design checks
+        """
+        if not OPENSEES_AVAILABLE:
+            return {
+                'success': False,
+                'error': 'OpenSees integration module not available. Please check installation.'
+            }
+
+        try:
+            description = params.get('description', '')
+            if not description:
+                return {
+                    'success': False,
+                    'error': 'Structure description is required'
+                }
+
+            dead_load_psf = params.get('dead_load_psf', 50)
+            live_load_psf = params.get('live_load_psf', 40)
+            analysis_type = params.get('analysis_type', 'static')
+
+            # Initialize OpenSees integration system
+            opensees_system = OpenSeesIntegrationSystem()
+
+            # Run complete analysis workflow
+            results = opensees_system.analyze_from_description(
+                description=description,
+                dead_load_psf=dead_load_psf,
+                live_load_psf=live_load_psf,
+                analysis_type=analysis_type
+            )
+
+            if results.get('success'):
+                return {
+                    'success': True,
+                    'structure_description': description,
+                    'analysis_type': analysis_type,
+                    'model_info': results.get('model_info', {}),
+                    'max_displacement': results.get('max_displacement', {}),
+                    'support_reactions': results.get('support_reactions', {}),
+                    'critical_forces': results.get('critical_forces', {}),
+                    'design_checks': results.get('design_checks', {}),
+                    'generated_code_file': results.get('code_file', ''),
+                    'summary': results.get('summary', ''),
+                    'message': 'Structural analysis completed successfully'
+                }
+            else:
+                return {
+                    'success': False,
+                    'error': results.get('error', 'Analysis failed')
+                }
+
+        except Exception as e:
+            return {
+                'success': False,
+                'error': f'Structural analysis failed: {str(e)}'
             }
     
     def get_tool_description(self) -> str:
@@ -353,6 +442,36 @@ STEEL_STRENGTH_TOOLS = [
                     "output_file": {
                         "type": "string",
                         "description": "Output filename for the blueprint SVG. Default: 'output/blueprint.svg'"
+                    }
+                },
+                "required": ["description"]
+            }
+        }
+    },
+    {
+        "type": "function",
+        "function": {
+            "name": "analyze_structure",
+            "description": "Perform automated structural analysis using OpenSeesPy. Converts building structure description into OpenSeesPy code, runs finite element analysis, and provides detailed results including displacements, forces, and design checks. Use this for detailed structural analysis after building design.",
+            "parameters": {
+                "type": "object",
+                "properties": {
+                    "description": {
+                        "type": "string",
+                        "description": "Natural language description of the structure to analyze. Example: 'A portal frame with two 20-foot columns and a 30-foot beam, using W14X90 sections'"
+                    },
+                    "dead_load_psf": {
+                        "type": "number",
+                        "description": "Dead load in pounds per square foot (psf). Default: 50 psf"
+                    },
+                    "live_load_psf": {
+                        "type": "number",
+                        "description": "Live load in pounds per square foot (psf). Default: 40 psf"
+                    },
+                    "analysis_type": {
+                        "type": "string",
+                        "description": "Type of analysis: 'static' (default) or 'modal'",
+                        "enum": ["static", "modal"]
                     }
                 },
                 "required": ["description"]

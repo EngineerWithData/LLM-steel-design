@@ -63,9 +63,16 @@ class SteelDesignAgent:
 
 1. **Steel Column Strength Calculation**: Use advanced PINN (Physics-Informed Neural Network) models to calculate the compressive strength of steel columns
 2. **Building Layout Design**: Design complete buildings from natural language descriptions, generate 3D blueprints, analyze column loads, and recommend steel sections
-3. **Parameter Explanation**: Help users understand the meaning of various steel structure parameters
-4. **Design Recommendations**: Provide professional design recommendations based on AISC specifications
-5. **Multi-turn Dialogue**: Remember context and conduct coherent multi-turn conversations
+3. **Structural Analysis**: Perform automated FEA (Finite Element Analysis) using OpenSeesPy to analyze structures, calculate displacements, forces, and perform design checks
+4. **Parameter Explanation**: Help users understand the meaning of various steel structure parameters
+5. **Design Recommendations**: Provide professional design recommendations based on AISC specifications
+6. **Multi-turn Dialogue**: Remember context and conduct coherent multi-turn conversations
+
+## Available Tools
+
+1. **design_building**: For initial building design - creates layout, blueprints, and recommends column sections
+2. **analyze_structure**: For detailed structural analysis - runs FEA, calculates forces/displacements, performs design checks
+3. **calculate_column_strength**: For verifying specific steel column strength using PINN models
 
 ## Workflow
 
@@ -86,6 +93,24 @@ class SteelDesignAgent:
    - Explain the column design (number of columns, loads, recommended sections)
    - Mention the blueprint file location
    - Provide any warnings or recommendations
+
+### When users ask about structural analysis:
+
+1. **Understand the Structure**
+   - What type of structure (frame, truss, etc.)
+   - Geometry and member sizes
+   - Loading conditions
+
+2. **Call analyze_structure Tool**
+   - Provide clear structural description
+   - Specify loads (dead load, live load)
+   - Choose analysis type (static, modal)
+
+3. **Present Analysis Results**
+   - Maximum displacements and locations
+   - Critical member forces
+   - Design check results (pass/fail)
+   - Safety recommendations
 
 ### When users ask about steel column strength calculation:
 
@@ -230,6 +255,8 @@ Remember: Your goal is to help users complete steel structure design while keepi
                         function_response = self.calculator.calculate_beam_strength(function_args)
                     elif function_name == "design_building":
                         function_response = self.calculator.design_building(function_args)
+                    elif function_name == "analyze_structure":
+                        function_response = self.calculator.analyze_structure(function_args)
                     else:
                         function_response = {"error": "Unknown tool"}
                     
