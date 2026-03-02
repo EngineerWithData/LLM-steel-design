@@ -76,14 +76,35 @@ LLM_MODEL=qwen-max
 
 ### 3. Choose Your Workflow
 
-#### Option A: Complete Integrated Design System (RECOMMENDED - NEW!)
+#### Option A: Use Startup Scripts (EASIEST - RECOMMENDED)
 
-**Start the complete workflow with all three tasks integrated:**
+**For Linux/Mac:**
+```bash
+./start_agent.sh
+```
+
+**For Windows:**
+```bash
+start_agent.bat
+```
+
+**Interactive Menu:**
+```
+Select mode:
+  1) Complete Integrated System (Recommended)
+     - All three tasks: Building Design + Analysis + Strength
+  2) Steel Strength Calculation Only (Task 3.2)
+  3) Exit
+```
+
+#### Option B: Direct Python Command
+
+**Complete Integrated System:**
 ```bash
 python integrated_design.py --mode interactive
 ```
 
-**Complete design from natural language:**
+**Example workflow:**
 ```
 Command: design
 
@@ -103,32 +124,18 @@ Live load (psf) [default: 40]: 50
 ✓ Design report saved to: output/design_report.json
 ```
 
-#### Option B: Structural Analysis Examples (Task 3.3)
+#### Option C: Examples and Demonstrations
 
 **Run quick start examples:**
 ```bash
 python examples/examples_quickstart.py
 ```
 
-This demonstrates:
+This demonstrates Task 3.3 features:
 - Multi-agent system (geometry, translation, validation)
 - OpenSeesPy code generation
 - Result parsing and interpretation
 - Engineering report generation
-
-#### Option C: Steel Strength Calculation (Task 3.2)
-
-**Start the agent:**
-```bash
-./start_agent.sh  # Linux/Mac
-start_agent.bat   # Windows
-```
-
-**Start conversation:**
-```
-User: I want to calculate steel column strength
-Agent: [Automatically calls PINN model and returns results]
-```
 
 ### 4. View Documentation
 

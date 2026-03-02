@@ -1,10 +1,15 @@
 #!/bin/bash
 
-# Steel Structure Design Agent Startup Script
+# Steel Structure Design Complete System Startup Script
+# Integrated system with Task 3.1 (Building Design) + 3.2 (Strength) + 3.3 (Analysis)
 
-echo "======================================"
-echo "  Steel Structure Design LLM Agent"
-echo "======================================"
+echo "========================================================="
+echo "  Steel Structure Design Complete System (v3.0)"
+echo "========================================================="
+echo "  Task 3.1: Building Design (Natural Language → Layout)"
+echo "  Task 3.2: Steel Strength (PINN Model)"
+echo "  Task 3.3: Structural Analysis (OpenSeesPy Integration)"
+echo "========================================================="
 echo ""
 
 # Check Python
@@ -30,7 +35,7 @@ fi
 
 # Check dependencies
 echo "Checking dependencies..."
-python3 -c "import openai" 2>/dev/null
+python3 -c "import openai, pydantic, torch" 2>/dev/null
 if [ $? -ne 0 ]; then
     echo "Warning: Missing dependency packages"
     read -p "Install dependencies? (y/n) " -n 1 -r
@@ -44,11 +49,40 @@ fi
 if [ ! -f "PINN model/normal/model_20250123_165719.pth" ]; then
     echo "Warning: PINN model file not found"
     echo "Path: PINN model/normal/model_20250123_165719.pth"
+    echo "Note: Task 3.2 (strength calculation) requires this file"
     echo ""
 fi
 
-# Start Agent
+# Display menu
 echo ""
-echo "Starting Agent..."
-echo ""
-python3 -m agent.agent
+echo "========================================================="
+echo "Select mode:"
+echo "  1) Complete Integrated System (Recommended)"
+echo "  2) Steel Strength Calculation Only (Task 3.2)"
+echo "  3) Exit"
+echo "========================================================="
+read -p "Enter your choice (1-3): " choice
+
+case $choice in
+    1)
+        echo ""
+        echo "Starting Complete Integrated System..."
+        echo "This includes all three tasks: Building Design, Analysis, and Strength Verification"
+        echo ""
+        python3 integrated_design.py --mode interactive
+        ;;
+    2)
+        echo ""
+        echo "Starting Steel Strength Calculator (Task 3.2 only)..."
+        echo ""
+        python3 -m agent.agent
+        ;;
+    3)
+        echo "Exiting..."
+        exit 0
+        ;;
+    *)
+        echo "Invalid choice. Exiting..."
+        exit 1
+        ;;
+esac

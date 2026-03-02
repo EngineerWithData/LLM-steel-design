@@ -1,9 +1,14 @@
 @echo off
-REM Steel Structure Design Agent Startup Script (Windows)
+REM Steel Structure Design Complete System Startup Script (Windows)
+REM Integrated system with Task 3.1 (Building Design) + 3.2 (Strength) + 3.3 (Analysis)
 
-echo ======================================
-echo   Steel Structure Design LLM Agent
-echo ======================================
+echo =========================================================
+echo   Steel Structure Design Complete System (v3.0)
+echo =========================================================
+echo   Task 3.1: Building Design (Natural Language to Layout)
+echo   Task 3.2: Steel Strength (PINN Model)
+echo   Task 3.3: Structural Analysis (OpenSeesPy Integration)
+echo =========================================================
 echo.
 
 REM Check Python
@@ -32,7 +37,7 @@ if not exist ".env" (
 
 REM Check dependencies
 echo Checking dependencies...
-python -c "import openai" 2>nul
+python -c "import openai, pydantic, torch" 2>nul
 if errorlevel 1 (
     echo Warning: Missing dependency packages
     set /p install="Install dependencies? (y/n): "
@@ -45,12 +50,38 @@ REM Check model file
 if not exist "PINN model\normal\model_20250123_165719.pth" (
     echo Warning: PINN model file not found
     echo Path: PINN model\normal\model_20250123_165719.pth
+    echo Note: Task 3.2 (strength calculation) requires this file
     echo.
 )
 
-REM Start Agent
+REM Display menu
 echo.
-echo Starting Agent...
-echo.
-python -m agent.agent
-pause
+echo =========================================================
+echo Select mode:
+echo   1) Complete Integrated System (Recommended)
+echo   2) Steel Strength Calculation Only (Task 3.2)
+echo   3) Exit
+echo =========================================================
+set /p choice="Enter your choice (1-3): "
+
+if "%choice%"=="1" (
+    echo.
+    echo Starting Complete Integrated System...
+    echo This includes all three tasks: Building Design, Analysis, and Strength Verification
+    echo.
+    python integrated_design.py --mode interactive
+    pause
+) else if "%choice%"=="2" (
+    echo.
+    echo Starting Steel Strength Calculator (Task 3.2 only)...
+    echo.
+    python -m agent.agent
+    pause
+) else if "%choice%"=="3" (
+    echo Exiting...
+    exit /b 0
+) else (
+    echo Invalid choice. Exiting...
+    pause
+    exit /b 1
+)
