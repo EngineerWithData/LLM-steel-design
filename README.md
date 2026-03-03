@@ -52,6 +52,8 @@ This project implements a complete LLM-driven intelligent agent system for struc
 
 ## Quick Start
 
+**New users?** See [QUICKSTART.md](QUICKSTART.md) for a step-by-step guide.
+
 ### 1. Install Dependencies
 
 ```bash
@@ -89,27 +91,41 @@ start_agent.bat
 ```
 
 These scripts will:
-- Check all dependencies (openai, pydantic, torch)
-- Verify .env configuration
-- Launch the complete integrated system automatically
-- No menu needed - starts full system by default
+- ✅ Check all dependencies automatically
+- ✅ Verify .env configuration
+- ✅ Provide a user-friendly menu with 4 options:
+  1. **Interactive Design Workflow** - Complete building design (recommended for beginners)
+  2. **Conversational Agent Mode** - Chat-based Q&A and guidance
+  3. **Run Quick Examples** - See system demonstrations
+  4. **Run Tests** - Verify installation
 
 #### Option B: Direct Python Command
 
-**Complete Integrated System:**
+**Complete Integrated System (Interactive Mode):**
 ```bash
 python integrated_design.py --mode interactive
 ```
 
+**Conversational Agent Mode:**
+```bash
+python -m agent.agent
+```
+
+**Run Examples:**
+```bash
+python examples/examples_quickstart.py
+```
+
 **Example workflow:**
 ```
-Command: design
+Command: python integrated_design.py --mode interactive
 
 Describe your building: I need a 3-story office building with 4 rooms per floor,
 each 20x15 feet, with a central corridor
 
 Dead load (psf) [default: 50]: 60
 Live load (psf) [default: 40]: 50
+Number of floors [default: 1]: 3
 
 [System processes:]
 1. Task 3.1: Generates building layout and geometry
@@ -117,26 +133,15 @@ Live load (psf) [default: 40]: 50
 3. Task 3.2: Verifies steel member strengths using PINN models
 
 ✓ Blueprint saved to: output/blueprint.svg
-✓ Analysis results: output/analysis_results.json
-✓ Design report saved to: output/design_report.json
+✓ Analysis results: output/opensees_analysis/
+✓ Design report saved to: output/complete_design_report.json
 ```
-
-#### Option C: Examples and Demonstrations
-
-**Run quick start examples:**
-```bash
-python examples/examples_quickstart.py
-```
-
-This demonstrates Task 3.3 features:
-- Multi-agent system (geometry, translation, validation)
-- OpenSeesPy code generation
-- Result parsing and interpretation
-- Engineering report generation
 
 ### 4. View Documentation
 
-All documentation is integrated in this README. For code-level details, refer to the docstrings in the source code.
+- **New Users:** Start with [QUICKSTART.md](QUICKSTART.md)
+- **Complete Guide:** Continue reading this README
+- **Code Examples:** Check [examples/](examples/) directory
 
 ## Usage Examples
 

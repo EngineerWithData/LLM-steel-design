@@ -33,7 +33,10 @@ class SteelDesignAgent:
         self.model_name = model_name or os.getenv('LLM_MODEL', 'qwen-max')
         
         if not self.api_key:
-            print("Warning: API key not set. Please set DASHSCOPE_API_KEY in .env file")
+            from .config import ERROR_MESSAGES
+            print(ERROR_MESSAGES['api_key_missing'])
+            print("\n⚠ Warning: API key not set. Limited functionality available.")
+            print("To configure, see instructions above or check QUICKSTART.md\n")
         
         # Initialize OpenAI client (compatible with Alibaba Cloud DashScope)
         try:
@@ -329,19 +332,29 @@ def main():
     default_model_path = "PINN model/normal/model_20250123_165719.pth"
     if os.path.exists(default_model_path):
         model_path = default_model_path
-        print(f"✓ Found pre-trained model: {model_path}")
+        print(f"✓ Found PINN model: {model_path}")
     else:
         model_path = None
-        print("⚠ Pre-trained model not found, some features will be unavailable")
+        from agent.config import ERROR_MESSAGES
+        print(ERROR_MESSAGES['model_not_found'].format(model_path=default_model_path))
+        print("⚠ Continuing without PINN model (limited functionality)\n")
     
     # Initialize Agent
     agent = SteelDesignAgent(model_path=model_path)
-    
+
     print()
-    print("Agent started! Enter 'quit' or 'exit' to exit")
-    print("Enter 'reset' to reset conversation")
-    print("Enter 'help' to view help")
-    print("-" * 60)
+    print("━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━")
+    print("Agent started! Available commands:")
+    print("  • Type your questions or requests naturally")
+    print("  • 'help' - View available tools and examples")
+    print("  • 'reset' - Clear conversation history")
+    print("  • 'quit' or 'exit' - Exit the program")
+    print("━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━")
+    print("\n💡 Quick examples:")
+    print("  • 'Design a 2-story office building with 4 rooms'")
+    print("  • 'Calculate column strength for A=10, I=100, c=5, L=120, fy=50, delta_o=0.1'")
+    print("  • 'What steel section should I use for a 200 kip column load?'")
+    print("━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━")
     print()
     
     while True:

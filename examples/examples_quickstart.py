@@ -3,7 +3,11 @@ Quick Start Example for Complete Integrated System
 Demonstrates the full workflow: Building Design → Analysis → Strength Check
 """
 
-from integrated_design_v3 import CompleteIntegratedSystem
+import sys
+import os
+sys.path.insert(0, os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
+
+from integrated_design import CompleteIntegratedSystem
 
 
 def example_1_simple_office():
@@ -145,7 +149,7 @@ def run_all_examples():
         print("  • generated_model.py - OpenSeesPy code")
 
     except Exception as e:
-        print(f("\n❌ Error running examples: {e}")
+        print(f"\n❌ Error running examples: {e}")
         import traceback
         traceback.print_exc()
 
