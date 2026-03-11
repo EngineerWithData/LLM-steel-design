@@ -219,16 +219,17 @@ class SteelStrengthCalculator:
             # Step 4: Recommend sections for each column
             column_designs = []
             total_steel_weight = 0
-            for col_id, load_data in column_loads.items():
-                section = optimize_column_section(load_data['total_load'], load_data['height'] * 12)
+            for col_id, col_load in column_loads.items():
+                section = optimize_column_section(col_load)
                 column_designs.append({
                     'column_id': col_id,
-                    'location': load_data['location'],
-                    'total_load': load_data['total_load'],
-                    'recommended_section': section['section'],
-                    'properties': section['properties']
+                    'total_load': col_load,
+                    'recommended_section': section['type'],
+                    'area_in2': section['area'],
+                    'capacity_lbs': section['capacity'],
+                    'utilization': section['utilization']
                 })
-                total_steel_weight += section['properties']['weight'] * load_data['height']
+                total_steel_weight += section['area'] * 3.4 * 10  # approx weight (lbs/ft * 10 ft height)
 
             return {
                 'success': True,

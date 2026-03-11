@@ -127,11 +127,11 @@ class CompleteIntegratedSystem:
 
                 # Optimize column sections
                 column_sections = {}
-                for col_id, load_data in column_loads.items():
-                    section = optimize_column_section(load_data['total_load'])
+                for col_id, col_load in column_loads.items():
+                    section = optimize_column_section(col_load)
                     column_sections[col_id] = {
                         'section': section,
-                        'load': load_data['total_load']
+                        'load': col_load
                     }
                 print(f"✓ Column sections optimized")
 
