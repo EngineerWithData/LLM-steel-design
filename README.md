@@ -377,6 +377,40 @@ The system consists of three integrated tasks working together:
 - **Workflow Orchestration**: Seamless agent coordination
 - **Output**: Comprehensive design reports with all analysis results
 
+### Structural Analysis Documentation
+
+Task 3.3 provides fully automated structural analysis using OpenSeesPy. The workflow is:
+
+1. **Natural Language to JSON** – The Geometry Agent parses the user's description (e.g., "A two‑story frame with 20‑ft columns and a 30‑ft beam") and creates a structured JSON model.
+2. **JSON to OpenSeesPy** – The Code Translation Agent converts the JSON into a complete OpenSeesPy script based on validated templates.
+3. **Model Validation** – The Validation Agent performs three layers of checks:
+   - **Syntax**: Ensures the generated Python code is syntactically correct.
+   - **Semantic**: Verifies that geometric relationships and boundary conditions are consistent.
+   - **Structural**: Checks for duplicate node IDs, unsupported element types, and stability of the model.
+4. **Execution & Parsing** – OpenSeesPy runs the model, and the Result Parser extracts displacements, reactions, and member forces. The system then produces a concise natural‑language report that highlights:
+   - Maximum lateral displacement and its location
+   - Critical member forces and utilization ratios
+   - Design check status (pass/fail) against AISC limits
+   - Suggested remedial actions if any checks fail
+
+#### Command‑line usage
+
+```bash
+python integrated_design.py --mode interactive   # Step‑by‑step wizard
+# or
+python -m agent.agent   # Direct chat interface, then call `analyze_structure` tool
+```
+
+#### Example query
+
+```
+User: Perform structural analysis for a portal frame with two 20‑ft columns, a 30‑ft beam, dead load 50 psf, live load 40 psf, static analysis.
+```
+
+The agent will return a JSON block containing `max_displacement`, `support_reactions`, `critical_forces`, and a brief natural‑language summary suitable for inclusion in a paper.
+
+This automation eliminates manual scripting errors and accelerates the design verification cycle.
+
 ## Test Results
 
 ### Test Statistics
