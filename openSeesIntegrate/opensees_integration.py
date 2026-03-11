@@ -82,7 +82,7 @@ class OpenSeesIntegrationSystem:
         print("\n[Step 1/6] Converting description to structural model...")
         try:
             structural_model = self.geometry_agent.process(description)
-            results['structural_model'] = structural_model.dict()
+            results['structural_model'] = structural_model.model_dump()
             print(f"✓ Model created: {len(structural_model.nodes)} nodes, "
                   f"{len(structural_model.elements)} elements")
         except Exception as e:
@@ -247,7 +247,7 @@ class OpenSeesIntegrationSystem:
                 num_floors=num_floors,
                 lateral_load_kip=lateral_load_kip
             )
-            results['structural_model'] = structural_model.dict()
+            results['structural_model'] = structural_model.model_dump()
             print(f"✓ Model created from building design")
             print(f"  - {len(structural_model.nodes)} nodes")
             print(f"  - {len(structural_model.elements)} elements")

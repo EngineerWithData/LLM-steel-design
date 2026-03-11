@@ -99,7 +99,7 @@ class PINNPredictor:
         """
         # Load model
         self.model = PINN(in_dim=6, h_dim=64, out_dim=1)
-        self.model.load_state_dict(torch.load(model_path, map_location=self.device))
+        self.model.load_state_dict(torch.load(model_path, map_location=self.device, weights_only=True))
         self.model.to(self.device)
         self.model.eval()
         

@@ -222,9 +222,9 @@ print("\\n[1/7] Model initialized")'''
                 magnitude = load.magnitude * force_factor
 
                 if dof == 1:
-                    load_cmd = f"{self.indent}load({load.node}, {magnitude:.2f}, 0.0, 0.0)  # Node {load.node}, DOF {dof}"
+                    load_cmd = f"load({load.node}, {magnitude:.2f}, 0.0, 0.0)  # Node {load.node}, DOF {dof}"
                 else:
-                    load_cmd = f"{self.indent}load({load.node}, 0.0, {magnitude:.2f}, 0.0)  # Node {load.node}, DOF {dof}"
+                    load_cmd = f"load({load.node}, 0.0, {magnitude:.2f}, 0.0)  # Node {load.node}, DOF {dof}"
                 lines.append(load_cmd)
 
         lines.append('print("[6/7] Loads defined")')

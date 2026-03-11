@@ -469,7 +469,7 @@ if __name__ == "__main__":
         # Save to JSON
         output_file = "/tmp/structural_model_example.json"
         with open(output_file, 'w') as f:
-            json.dump(model.dict(), f, indent=2)
+            json.dump(model.model_dump(), f, indent=2)
         print(f"\n✓ Model saved to: {output_file}")
 
     except Exception as e:

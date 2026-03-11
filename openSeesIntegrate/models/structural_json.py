@@ -4,7 +4,7 @@ Defines the intermediate representation between natural language and OpenSeesPy 
 """
 
 from typing import List, Dict, Optional, Literal
-from pydantic import BaseModel, Field, validator
+from pydantic import BaseModel, Field, field_validator, model_validator
 
 
 class Node(BaseModel):
@@ -50,9 +50,10 @@ class Element(BaseModel):
     orientation: Optional[str] = Field(None, description="Element orientation (vertical, horizontal)")
     transf_tag: Optional[int] = Field(1, description="Geometric transformation tag")
 
-    @validator('nodes')
-    def validate_node_count(cls, v, values):
-        elem_type = values.get('type', '')
+    @field_validator('nodes')
+    @classmethod
+    def validate_node_count(cls, v, info):
+        elem_type = info.data.get('type', '')
         if 'beam' in elem_type.lower() or 'truss' in elem_type.lower():
             if len(v) != 2:
                 raise ValueError(f"Beam/Truss elements require exactly 2 nodes, got {len(v)}")
@@ -113,33 +114,34 @@ class StructuralModel(BaseModel):
     )
     analysis: AnalysisSettings = Field(..., description="Analysis settings")
 
-    @validator('nodes')
+    @field_validator('nodes')
+    @classmethod
     def validate_unique_node_ids(cls, v):
         ids = [node.id for node in v]
         if len(ids) != len(set(ids)):
             raise ValueError("Node IDs must be unique")
         return v
 
-    @validator('elements')
+    @field_validator('elements')
+    @classmethod
     def validate_unique_element_ids(cls, v):
         ids = [elem.id for elem in v]
         if len(ids) != len(set(ids)):
             raise ValueError("Element IDs must be unique")
         return v
 
-    @validator('elements')
-    def validate_element_nodes_exist(cls, v, values):
-        if 'nodes' in values:
-            node_ids = {node.id for node in values['nodes']}
-            for elem in v:
-                for node_id in elem.nodes:
-                    if node_id not in node_ids:
-                        raise ValueError(f"Element {elem.id} references non-existent node {node_id}")
-        return v
+    @model_validator(mode='after')
+    def validate_element_nodes_exist(self):
+        node_ids = {node.id for node in self.nodes}
+        for elem in self.elements:
+            for node_id in elem.nodes:
+                if node_id not in node_ids:
+                    raise ValueError(f"Element {elem.id} references non-existent node {node_id}")
+        return self
 
     def to_dict(self) -> dict:
         """Convert model to dictionary"""
-        return self.dict()
+        return self.model_dump()
 
     @classmethod
     def from_dict(cls, data: dict):
@@ -207,6 +209,6 @@ if __name__ == "__main__":
 
     # Export to JSON
     import json
-    json_str = example_model.json(indent=2)
+    json_str = example_model.model_dump_json(indent=2)
     print("\nJSON representation:")
     print(json_str[:500] + "...")
