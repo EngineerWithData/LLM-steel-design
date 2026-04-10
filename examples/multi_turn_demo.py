@@ -1,6 +1,5 @@
 """
-Multi-turn Dialogue Demo Script
-Demonstrates how Agent handles incomplete information and unrelated questions
+Multi-turn dialogue demo for the steel design agent.
 """
 
 import sys
@@ -16,31 +15,21 @@ def print_separator():
     print("\n" + "=" * 80 + "\n")
 
 
-def simulate_typing(text, delay=0.03):
-    """Simulate typing effect"""
-    for char in text:
-        print(char, end='', flush=True)
-        time.sleep(delay)
-    print()
-
-
 def demo_scenario_1():
     """Demo Scenario 1: Gradually provide parameters"""
-    print("╔" + "═" * 78 + "╗")
-    print("║" + " " * 20 + "Scenario 1: Gradually Provide Parameters" + " " * 16 + "║")
-    print("╚" + "═" * 78 + "╝")
-    print()
+    print("Scenario 1: Gradually provide parameters")
+    print_separator()
     
     model_path = "PINN model/normal/model_20250123_165719.pth"
     if not os.path.exists(model_path):
-        print("⚠ Model file does not exist")
+        print("Model file not found.")
         return
     
     agent = SteelDesignAgent(model_path=model_path)
     
     if not agent.client:
-        print("⚠ API key configuration required to run this demo")
-        print("Please set DASHSCOPE_API_KEY in .env file")
+        print("API key configuration is required to run this demo.")
+        print("Set DASHSCOPE_API_KEY in .env.")
         return
     
     print("This scenario demonstrates how Agent guides users to gradually provide complete parameters\n")
@@ -63,20 +52,18 @@ def demo_scenario_1():
 
 def demo_scenario_2():
     """Demo Scenario 2: Handle unrelated questions"""
-    print("╔" + "═" * 78 + "╗")
-    print("║" + " " * 20 + "Scenario 2: Handle Unrelated Questions" + " " * 18 + "║")
-    print("╚" + "═" * 78 + "╝")
-    print()
+    print("Scenario 2: Handle unrelated questions")
+    print_separator()
     
     model_path = "PINN model/normal/model_20250123_165719.pth"
     if not os.path.exists(model_path):
-        print("⚠ Model file does not exist")
+        print("Model file not found.")
         return
     
     agent = SteelDesignAgent(model_path=model_path)
     
     if not agent.client:
-        print("⚠ API key configuration required")
+        print("API key configuration is required.")
         return
     
     print("This scenario demonstrates how Agent handles questions unrelated to steel structure design\n")
@@ -99,20 +86,18 @@ def demo_scenario_2():
 
 def demo_scenario_3():
     """Demo Scenario 3: Ask for missing parameters"""
-    print("╔" + "═" * 78 + "╗")
-    print("║" + " " * 20 + "Scenario 3: Proactively Ask for Missing Parameters" + " " * 6 + "║")
-    print("╚" + "═" * 78 + "╝")
-    print()
+    print("Scenario 3: Ask for missing parameters")
+    print_separator()
     
     model_path = "PINN model/normal/model_20250123_165719.pth"
     if not os.path.exists(model_path):
-        print("⚠ Model file does not exist")
+        print("Model file not found.")
         return
     
     agent = SteelDesignAgent(model_path=model_path)
     
     if not agent.client:
-        print("⚠ API key configuration required")
+        print("API key configuration is required.")
         return
     
     print("This scenario demonstrates how Agent identifies missing parameters and proactively asks\n")
@@ -135,20 +120,18 @@ def demo_scenario_3():
 
 def demo_scenario_4():
     """Demo Scenario 4: Context memory"""
-    print("╔" + "═" * 78 + "╗")
-    print("║" + " " * 20 + "Scenario 4: Context Memory Capability" + " " * 19 + "║")
-    print("╚" + "═" * 78 + "╝")
-    print()
+    print("Scenario 4: Context memory")
+    print_separator()
     
     model_path = "PINN model/normal/model_20250123_165719.pth"
     if not os.path.exists(model_path):
-        print("⚠ Model file does not exist")
+        print("Model file not found.")
         return
     
     agent = SteelDesignAgent(model_path=model_path)
     
     if not agent.client:
-        print("⚠ API key configuration required")
+        print("API key configuration is required.")
         return
     
     print("This scenario demonstrates how Agent remembers information from previous conversations\n")
@@ -170,24 +153,22 @@ def demo_scenario_4():
 
 def interactive_demo():
     """Interactive demo"""
-    print("╔" + "═" * 78 + "╗")
-    print("║" + " " * 20 + "Interactive Demo Mode" + " " * 36 + "║")
-    print("╚" + "═" * 78 + "╝")
-    print()
+    print("Interactive demo")
+    print_separator()
     
     model_path = "PINN model/normal/model_20250123_165719.pth"
     if not os.path.exists(model_path):
-        print("⚠ Model file does not exist")
+        print("Model file not found.")
         return
     
     agent = SteelDesignAgent(model_path=model_path)
     
     if not agent.client:
-        print("⚠ API key configuration required")
+        print("API key configuration is required.")
         return
     
-    print("Now you can freely chat with Agent")
-    print("Type 'quit' to exit, type 'reset' to reset conversation")
+    print("Chat with the agent.")
+    print("Type 'quit' to exit or 'reset' to clear the conversation.")
     print_separator()
     
     while True:
@@ -198,12 +179,12 @@ def interactive_demo():
                 continue
             
             if user_input.lower() in ['quit', 'exit']:
-                print("Demo ended!")
+                print("Session ended.")
                 break
             
             if user_input.lower() == 'reset':
                 agent.reset_conversation()
-                print("Conversation reset")
+                print("Conversation reset.")
                 continue
             
             response = agent.chat(user_input)
@@ -211,19 +192,16 @@ def interactive_demo():
             print_separator()
             
         except KeyboardInterrupt:
-            print("\n\nDemo ended!")
+            print("\n\nSession ended.")
             break
 
 
 def main():
     """Main function"""
-    print("\n")
-    print("╔" + "═" * 78 + "╗")
-    print("║" + " " * 15 + "Steel Structure Design Agent - Multi-turn Dialogue Demo" + " " * 6 + "║")
-    print("╚" + "═" * 78 + "╝")
-    print()
+    print("Steel Structure Design Agent - Multi-turn Dialogue Demo")
+    print_separator()
     
-    print("This demo showcases Agent's multi-turn dialogue capabilities:")
+    print("This demo includes:")
     print("  1. Gradually provide parameters")
     print("  2. Handle unrelated questions")
     print("  3. Proactively ask for missing parameters")
@@ -231,11 +209,11 @@ def main():
     print("  5. Interactive demo")
     print()
     
-    print("Note: LLM API key configuration required to run demo")
+    print("LLM API key configuration is required to run this demo.")
     print()
     
     while True:
-        print("Please select demo scenario:")
+        print("Select a demo scenario:")
         print("  1 - Scenario 1: Gradually provide parameters")
         print("  2 - Scenario 2: Handle unrelated questions")
         print("  3 - Scenario 3: Proactively ask for missing parameters")
@@ -244,7 +222,7 @@ def main():
         print("  0 - Exit")
         print()
         
-        choice = input("Please enter option (0-5): ").strip()
+        choice = input("Enter an option (0-5): ").strip()
         
         if choice == '0':
             print("Goodbye!")
@@ -260,7 +238,7 @@ def main():
         elif choice == '5':
             interactive_demo()
         else:
-            print("Invalid option, please select again")
+            print("Invalid option. Please try again.")
         
         print()
 

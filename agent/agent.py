@@ -35,8 +35,8 @@ class SteelDesignAgent:
         if not self.api_key:
             from .config import ERROR_MESSAGES
             print(ERROR_MESSAGES['api_key_missing'])
-            print("\n⚠ Warning: API key not set. Limited functionality available.")
-            print("To configure, see instructions above or check QUICKSTART.md\n")
+            print("\nAPI key not set. Limited functionality is available.")
+            print("See QUICKSTART.md for configuration details.\n")
         
         # Initialize OpenAI client (compatible with Alibaba Cloud DashScope)
         try:
@@ -46,11 +46,11 @@ class SteelDesignAgent:
             ) if self.api_key else None
             
             if self.client:
-                print(f"✓ LLM client initialized")
+                print("LLM client initialized")
                 print(f"  - Base URL: {self.base_url}")
                 print(f"  - Model: {self.model_name}")
         except Exception as e:
-            print(f"✗ LLM client initialization failed: {e}")
+            print(f"LLM client initialization failed: {e}")
             self.client = None
         
         # Initialize tools
@@ -203,7 +203,7 @@ Remember: Your goal is to help users complete steel structure design while keepi
             Agent response
         """
         if not self.client:
-            return "Error: OpenAI API not configured. Please set OPENAI_API_KEY environment variable"
+            return "Error: no API key configured. Set DASHSCOPE_API_KEY or OPENAI_API_KEY in the environment."
         
         # Add user message to history
         self.conversation_history.append({
@@ -332,29 +332,26 @@ def main():
     default_model_path = "PINN model/normal/model_20250123_165719.pth"
     if os.path.exists(default_model_path):
         model_path = default_model_path
-        print(f"✓ Found PINN model: {model_path}")
+        print(f"PINN model found: {model_path}")
     else:
         model_path = None
         from agent.config import ERROR_MESSAGES
         print(ERROR_MESSAGES['model_not_found'].format(model_path=default_model_path))
-        print("⚠ Continuing without PINN model (limited functionality)\n")
+        print("Continuing without the PINN model. Some functionality will be unavailable.\n")
     
     # Initialize Agent
     agent = SteelDesignAgent(model_path=model_path)
 
     print()
-    print("━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━")
-    print("Agent started! Available commands:")
-    print("  • Type your questions or requests naturally")
-    print("  • 'help' - View available tools and examples")
-    print("  • 'reset' - Clear conversation history")
-    print("  • 'quit' or 'exit' - Exit the program")
-    print("━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━")
-    print("\n💡 Quick examples:")
-    print("  • 'Design a 2-story office building with 4 rooms'")
-    print("  • 'Calculate column strength for A=10, I=100, c=5, L=120, fy=50, delta_o=0.1'")
-    print("  • 'What steel section should I use for a 200 kip column load?'")
-    print("━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━")
+    print("Available commands:")
+    print("  - Type questions or requests naturally")
+    print("  - 'help' to view available tools and examples")
+    print("  - 'reset' to clear conversation history")
+    print("  - 'quit' or 'exit' to leave the program")
+    print("\nQuick examples:")
+    print("  - 'Design a 2-story office building with 4 rooms'")
+    print("  - 'Calculate column strength for A=10, I=100, c=5, L=120, fy=50, delta_o=0.1'")
+    print("  - 'What steel section should I use for a 200 kip column load?'")
     print()
     
     while True:

@@ -1,5 +1,5 @@
 """
-LLM Agent for Structural Steel Design
+Structural steel design agent package.
 """
 
 from .agent import SteelDesignAgent

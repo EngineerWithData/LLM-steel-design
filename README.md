@@ -1,10 +1,10 @@
 # LLM Agent Framework for Structural Steel Design
 
-An LLM-powered intelligent agent framework for accelerating and automating structural steel design with integrated building layout generation, structural analysis automation, and 3D visualization.
+A project for structural steel design automation with integrated building layout generation, structural analysis, and visualization.
 
-## Project Overview
+## Project overview
 
-This project implements a complete LLM-driven intelligent agent system for structural steel design automation. The system integrates building layout generation, automated structural analysis with OpenSeesPy, PINN-based strength verification, and comprehensive design workflow automation.
+This repository combines building layout generation, automated structural analysis with OpenSeesPy, PINN-based strength verification, and an end-to-end design workflow.
 
 **Project Information**:
 - **Version**: v3.0.0
@@ -12,112 +12,103 @@ This project implements a complete LLM-driven intelligent agent system for struc
 - **Institution**: Johns Hopkins University
 - **Last Updated**: March 3, 2026
 
-## Main Features
+## Main features
 
-### ✅ Implemented Features
+### Implemented features
 
-#### 1. Building Design (Task 3.1) - ✅ Complete
-- **🏗️ Natural Language Building Layout**: Describe buildings in plain language, automatically generate room layouts
-- **📐 3D Blueprint Visualization**: Generate perspective SVG blueprints with columns, beams, and connections
-- **⚖️ Column Load Analysis**: Automatically calculate tributary areas and loads for all columns
-- **🔧 Section Optimization**: Recommend optimal steel sections (W-shapes) based on load requirements
+#### 1. Building design (Task 3.1)
+- Generate layouts from natural-language building descriptions
+- Create SVG blueprints with columns, beams, and connections
+- Calculate column loads automatically
+- Recommend W-shape sections based on load requirements
 
-#### 2. Steel Strength Verification (Task 3.2) - ✅ Complete
-- **PINN-Based Strength Calculation**: Calculate steel column compressive strength using Physics-Informed Neural Networks
-- **Natural Language Interaction**: Interact with users through chat
-- **Multi-turn Dialogue**: Support coherent multi-turn conversations with context memory
-- **Intelligent Parameter Recognition**: Automatically recognize design parameters (supports multiple formats)
-- **Multi-API Support**: Support for OpenAI and Alibaba Cloud DashScope APIs
+#### 2. Steel strength verification (Task 3.2)
+- Calculate column compressive strength with a PINN model
+- Support chat-based interaction
+- Support multi-turn conversations with context memory
+- Recognize design parameters in multiple formats
+- Support OpenAI-compatible APIs and DashScope
 
-#### 3. Structural Analysis Automation (Task 3.3) - ✅ Complete (NEW!)
-- **🤖 Multi-Agent System**: Three specialized LLM agents for geometry parsing, code translation, and validation
-- **📋 JSON Intermediate Format**: Structured data representation prevents LLM hallucination
-- **🔧 Automated OpenSeesPy Code Generation**: Template-based generation from structural models
-- **✅ Three-Layer Validation**: Syntax, semantic, and structural stability validation
-- **⚡ OpenSeesPy Integration**: Execute structural analysis and parse results automatically
-- **📊 Natural Language Results**: Generate engineering reports with displacements, forces, and design checks
-- **🗄️ W-Section Database**: 40+ AISC standard steel sections with complete properties
-- **🔗 Full Integration**: Seamless workflow from natural language to analysis results
+#### 3. Structural analysis automation (Task 3.3)
+- Use separate agents for geometry parsing, code translation, and validation
+- Convert structural descriptions into a JSON intermediate format
+- Generate OpenSeesPy code from structured models
+- Validate syntax, semantics, and structural stability
+- Run OpenSeesPy analyses and parse results automatically
+- Generate engineering summaries with displacements, forces, and checks
+- Provide a W-section database with AISC properties
 
-#### 4. Complete Integrated Workflow - ✅ Complete
-- **End-to-End Automation**: Natural language → Building design → Structural analysis → Strength verification
-- **📊 Comprehensive Reports**: Detailed JSON and natural language design reports
-- **🔄 Agent Orchestration**: Multiple specialized agents working together seamlessly
+#### 4. Integrated workflow
+- Support an end-to-end workflow from natural-language input to design results
+- Generate JSON and natural-language reports
+- Coordinate multiple specialized components in one workflow
 
-### 🚧 Features Under Development
+### Features under development
 
-- **Steel Beam Strength Calculation**: Calculate steel beam flexural strength
-- **Nonlinear Analysis**: Extend to nonlinear structural analysis
-- **3D Structures**: Support for 3D building frames
+- Steel beam flexural strength calculation
+- Nonlinear structural analysis
+- 3D building frames
 
-## Quick Start
+## Quick start
 
-**New users?** See [QUICKSTART.md](QUICKSTART.md) for a step-by-step guide.
+For setup instructions, see [QUICKSTART.md](QUICKSTART.md).
 
-### 1. Install Dependencies
+### 1. Install dependencies
 
 ```bash
 pip install -r requirements.txt
 ```
 
-### 2. Configure Environment Variables
+### 2. Configure environment variables
 
-Create a `.env` file and add the following content:
+Create a `.env` file with one of the following configurations:
 
 ```bash
-# Alibaba Cloud DashScope API Configuration (Recommended)
+# DashScope
 DASHSCOPE_API_KEY=your-api-key
 LLM_BASE_URL=https://dashscope.aliyuncs.com/compatible-mode/v1
 LLM_MODEL=qwen-max
 
-# Or use OpenAI API
+# Or OpenAI
 # OPENAI_API_KEY=your-openai-api-key
 # LLM_BASE_URL=https://api.openai.com/v1
 # LLM_MODEL=gpt-4-turbo-preview
 ```
 
-### 3. Choose Your Workflow
+### 3. Choose a workflow
 
-#### Option A: Use Startup Scripts (EASIEST - RECOMMENDED)
+#### Option A: Startup scripts
 
-**For Linux/Mac:**
+Linux/macOS:
 ```bash
 ./start_agent.sh
 ```
 
-**For Windows:**
+Windows:
 ```bash
 start_agent.bat
 ```
 
-These scripts will:
-- ✅ Check all dependencies automatically
-- ✅ Verify .env configuration
-- ✅ Provide a user-friendly menu with 4 options:
-  1. **Interactive Design Workflow** - Complete building design (recommended for beginners)
-  2. **Conversational Agent Mode** - Chat-based Q&A and guidance
-  3. **Run Quick Examples** - See system demonstrations
-  4. **Run Tests** - Verify installation
+#### Option B: Direct commands
 
-#### Option B: Direct Python Command
-
-**Complete Integrated System (Interactive Mode):**
+Interactive workflow:
 ```bash
 python integrated_design.py --mode interactive
 ```
 
-**Conversational Agent Mode:**
+Conversational agent:
 ```bash
 python -m agent.agent
 ```
 
-**Run Examples:**
+Quick examples:
 ```bash
 python examples/examples_quickstart.py
 ```
 
-**Example workflow:**
-```
+### 4. Example workflow
+
+```text
 Command: python integrated_design.py --mode interactive
 
 Describe your building: I need a 3-story office building with 4 rooms per floor,
@@ -127,140 +118,81 @@ Dead load (psf) [default: 50]: 60
 Live load (psf) [default: 40]: 50
 Number of floors [default: 1]: 3
 
-[System processes:]
-1. Task 3.1: Generates building layout and geometry
-2. Task 3.3: Creates structural analysis model, generates OpenSeesPy code, runs analysis
-3. Task 3.2: Verifies steel member strengths using PINN models
+[System processes the design...]
 
-✓ Blueprint saved to: output/blueprint.svg
-✓ Analysis results: output/opensees_analysis/
-✓ Design report saved to: output/complete_design_report.json
+Blueprint saved to: output/blueprint.svg
+Analysis results: output/opensees_analysis/
+Design report saved to: output/complete_design_report.json
 ```
 
-### 4. View Documentation
+## Usage examples
 
-- **New Users:** Start with [QUICKSTART.md](QUICKSTART.md)
-- **Complete Guide:** Continue reading this README
-- **Code Examples:** Check [examples/](examples/) directory
-
-## Usage Examples
-
-### Example 1: Command Line Interaction (Supports Multi-turn Dialogue)
+### Command-line interaction
 
 ```bash
-cd agent
-python agent.py
+python -m agent.agent
 ```
 
-**Multi-turn Dialogue Example**:
-```
+Example:
+
+```text
 User: Hello, I want to calculate steel column strength
-Agent: Great! I can help you calculate the compressive strength of a steel column.
-      Please provide the following parameters:
-      - A (cross-sectional area, unit: in²)
-      - I (moment of inertia, unit: in⁴)
-      - c (distance from section center to edge, unit: in)
-      - L (column length, unit: in)
-      - fy (yield strength, unit: ksi)
-      - delta_o (initial imperfection, unit: in)
+Agent: Please provide A, I, c, L, fy, and delta_o.
 
-User: Cross-sectional area is 10 square inches, moment of inertia is 100
-Agent: Okay, I've recorded:
-      - Cross-sectional area A = 10 in²
-      - Moment of inertia I = 100 in⁴
-      
-      Still need the following parameters:
-      - c (distance from section center to edge)
-      - L (column length)
-      - fy (yield strength)
-      - delta_o (initial imperfection)
-
-User: c=5, L=120, fy=50, delta_o=0.1
-Agent: Calculating...
-      
-      Calculation Results:
-      - Nominal compressive strength Pn: 670.74 kip
-      - Theoretical strength (Perry-Robertson formula): 469.28 kip
-      - Predicted to theoretical value ratio: 1.43
+User: A=10, I=100, c=5, L=120, fy=50, delta_o=0.1
+Agent: [Returns the calculated strength and a short explanation]
 ```
 
-**Handling Unrelated Questions**:
-```
-User: How's the weather today?
-Agent: I'm a steel structure design assistant and don't have information about weather.
-      However, I can help you with steel column and beam strength calculations
-      and design analysis. Do you have any steel structure design questions?
-
-User: Okay, then help me calculate steel column strength
-Agent: Great! Please provide the steel column design parameters...
-```
-
-### Example 2: Python API Call
+### Python API
 
 ```python
 from agent import SteelDesignAgent
 
-# Initialize Agent
 agent = SteelDesignAgent(
     model_path="PINN model/normal/model_20250123_165719.pth"
 )
 
-# Conversation
-response = agent.chat("Calculate steel column strength: A=10, I=100, c=5, L=120, fy=50, delta_o=0.1")
+response = agent.chat(
+    "Calculate steel column strength: A=10, I=100, c=5, L=120, fy=50, delta_o=0.1"
+)
 print(response)
 ```
 
-### Example 3: Direct Tool Call
+### Direct tool call
 
 ```python
 from agent.tools import SteelStrengthCalculator
 
-# Initialize calculator
 calculator = SteelStrengthCalculator(
     model_path="PINN model/normal/model_20250123_165719.pth"
 )
 
-# Calculate steel column strength
 params = {
-    'A': 10.0,      # Cross-sectional area (in²)
-    'I': 100.0,     # Moment of inertia (in⁴)
-    'c': 5.0,       # Distance from section center to edge (in)
-    'L': 120.0,     # Column length (in)
-    'fy': 50.0,     # Yield strength (ksi)
-    'delta_o': 0.1  # Initial imperfection (in)
+    'A': 10.0,
+    'I': 100.0,
+    'c': 5.0,
+    'L': 120.0,
+    'fy': 50.0,
+    'delta_o': 0.1,
 }
 
 result = calculator.calculate_column_strength(params)
 print(result)
 ```
 
-### Example 4: Run Tests
+### Run tests
 
 ```bash
-cd tests
-python test_agent.py
+python -m pytest tests/ -v
 ```
 
-### Example 5: View Usage Examples
+### Run example scripts
 
 ```bash
-cd examples
-python usage_examples.py
+python examples/usage_examples.py
+python examples/multi_turn_demo.py
+python examples/examples_quickstart.py
 ```
-
-### Example 6: Multi-turn Dialogue Demo
-
-```bash
-cd examples
-python multi_turn_demo.py
-```
-
-This demo showcases the Agent's multi-turn dialogue capabilities:
-- Gradually providing parameters
-- Handling unrelated questions
-- Proactively asking for missing parameters
-- Context memory capability
-- Interactive demo
 
 ## Project Structure
 
@@ -362,7 +294,7 @@ The system consists of three integrated tasks working together:
 - **Physical Constraints**: Perry-Robertson formula
 - **Network Structure**: 3 hidden layers, 64 neurons per layer
 
-#### Task 3.3: Structural Analysis Automation (NEW!)
+#### Task 3.3: Structural Analysis Automation
 - **Multi-Agent Architecture**:
   - Geometry Agent: Natural language → Structural JSON
   - Code Translation Agent: JSON → OpenSeesPy code (template-based)
@@ -415,18 +347,18 @@ This automation eliminates manual scripting errors and accelerates the design ve
 
 ### Test Statistics
 
-#### Task 3.3 Tests (NEW!)
-- **Core Functionality Tests**: 8/8 passed (100%) ✅
-- **Force Equilibrium**: Error < 0.001% ✅
-- **Code Generation**: 110+ lines of valid OpenSeesPy code ✅
-- **Result Parsing**: Displacement and force extraction validated ✅
-- **Test Coverage**: All multi-agent components verified ✅
+#### Task 3.3 tests
+- **Core functionality tests**: 8/8 passed (100%)
+- **Force equilibrium**: Error < 0.001%
+- **Code generation**: 110+ lines of valid OpenSeesPy code
+- **Result parsing**: Displacement and force extraction validated
+- **Test coverage**: All multi-agent components verified
 
 #### Overall System Tests
 - **Test Framework**: pytest 7.4.4
 - **Test Files**: 12+
 - **Test Count**: 58+
-- **Pass Rate**: **100%** ✅
+- **Pass rate**: **100%**
 - **Lines of Code**: 10,000+ lines (including Task 3.3)
 - **Execution Time**: ~3 seconds
 
@@ -490,10 +422,10 @@ pytest --cov=agent --cov-report=html
 
 | Metric | Actual Value | Target Value | Status |
 |--------|--------------|--------------|--------|
-| Test Pass Rate | 100% | 100% | ✅ |
-| Model Inference Speed | < 50ms | < 100ms | ✅ |
-| Parameter Recognition Accuracy | 100% | > 95% | ✅ |
-| Test Coverage | ~85% | > 80% | ✅ |
+| Test pass rate | 100% | 100% | Met |
+| Model inference speed | < 50ms | < 100ms | Met |
+| Parameter recognition accuracy | 100% | > 95% | Met |
+| Test coverage | ~85% | > 80% | Met |
 
 ## Technical Features
 
@@ -598,4 +530,4 @@ For questions or suggestions, please contact:
 
 **Version**: v3.0.0
 **Last Updated**: March 3, 2026
-**Status**: ✅ Task 3.1 Complete | ✅ Task 3.2 Complete | ✅ Task 3.3 Complete | ✅ Full Integration Complete
+**Status**: Task 3.1 complete | Task 3.2 complete | Task 3.3 complete | Full integration complete

@@ -1,6 +1,5 @@
 """
-Building Design via Agent Demo
-Demonstrates how to use building design features through the steel design agent
+Building design demo for the steel design agent.
 """
 
 import sys
@@ -13,8 +12,7 @@ from agent.agent import SteelDesignAgent
 def demo_building_design_via_agent():
     """Demonstrate building design through agent conversation"""
     
-    print("="*70)
-    print("Building Design via Steel Design Agent Demo")
+    print("Building design demo")
     print("="*70)
     print()
     
@@ -25,7 +23,7 @@ def demo_building_design_via_agent():
     else:
         agent = SteelDesignAgent()
     
-    print("Agent initialized successfully!")
+    print("Agent initialized.")
     print()
     
     # Demo conversations
@@ -62,11 +60,10 @@ def demo_building_design_via_agent():
             print("\n[Conversation reset for next example]\n")
     
     print("\n" + "="*70)
-    print("Demo completed!")
+    print("Run completed.")
     print("="*70)
-    print("\nNote: The agent will automatically call the design_building tool")
-    print("when it detects building design requests in the conversation.")
-    print("\nGenerated files will be saved to the 'output/' directory:")
+    print("\nThe agent calls the design_building tool when it detects a building design request.")
+    print("\nGenerated files are saved to the 'output/' directory:")
     print("  - output/blueprint.svg (3D blueprint visualization)")
     print("  - Complete design data in the agent's response")
 
@@ -75,7 +72,7 @@ def demo_mixed_conversation():
     """Demonstrate mixed conversation with both building design and column calculation"""
     
     print("\n\n" + "="*70)
-    print("Mixed Conversation Demo")
+    print("Mixed conversation demo")
     print("="*70)
     print()
     
@@ -100,15 +97,12 @@ def demo_mixed_conversation():
         print("-"*70 + "\n")
     
     print("="*70)
-    print("Mixed conversation demo completed!")
+    print("Mixed conversation run completed.")
     print("="*70)
 
 
 if __name__ == "__main__":
-    print("\n" + "🏗️ " * 20)
-    print("\nBuilding Design Integration Demo")
-    print("Now you can design buildings through the steel design agent!")
-    print("\n" + "🏗️ " * 20 + "\n")
+    print("\nBuilding design integration demo\n")
     
     # Run demos
     demo_building_design_via_agent()
@@ -116,12 +110,11 @@ if __name__ == "__main__":
     # Uncomment to run mixed conversation demo
     # demo_mixed_conversation()
     
-    print("\n\n" + "="*70)
-    print("How to Use in Interactive Mode:")
+    print("\n\nHow to use the interactive mode:")
     print("="*70)
     print("""
 1. Start the agent:
-   $ ./start_agent.sh
+   ./start_agent.sh
    
 2. Ask for building design:
    User: Design a building with 4 rooms, each 20x15 feet

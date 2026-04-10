@@ -1,6 +1,5 @@
 """
-Usage Example Script
-Demonstrates how to use Agent for steel structure design
+Usage examples for the steel design agent.
 """
 
 import sys
@@ -14,7 +13,7 @@ from agent.tools import SteelStrengthCalculator
 def example_1_direct_calculation():
     """Example 1: Direct call to calculation tool"""
     print("=" * 60)
-    print("Example 1: Direct call to steel column strength calculation tool")
+    print("Example 1: Direct steel column strength calculation")
     print("=" * 60)
     
     # Initialize calculator
@@ -44,11 +43,11 @@ def example_1_direct_calculation():
     
     if result['success']:
         print("\nCalculation result:")
-        print(f"  ✓ Nominal compressive strength Pn = {result['nominal_strength_Pn']:.2f} kip")
-        print(f"  ✓ Theoretical strength = {result['theoretical_strength']:.2f} kip")
-        print(f"  ✓ Prediction/Theory ratio = {result['prediction_ratio']:.3f}")
+        print(f"  Nominal compressive strength Pn = {result['nominal_strength_Pn']:.2f} kip")
+        print(f"  Theoretical strength = {result['theoretical_strength']:.2f} kip")
+        print(f"  Prediction/Theory ratio = {result['prediction_ratio']:.3f}")
     else:
-        print(f"\n✗ Calculation failed: {result['error']}")
+        print(f"\nCalculation failed: {result['error']}")
     
     print()
 
@@ -56,7 +55,7 @@ def example_1_direct_calculation():
 def example_2_agent_chat():
     """Example 2: Using Agent for conversation"""
     print("=" * 60)
-    print("Example 2: Using LLM Agent for conversational design")
+    print("Example 2: Conversational design workflow")
     print("=" * 60)
     
     # Initialize Agent
@@ -64,8 +63,8 @@ def example_2_agent_chat():
     agent = SteelDesignAgent(model_path=model_path)
     
     if not agent.client:
-        print("\n⚠ LLM client not initialized, please check .env configuration")
-        print("Skip this example\n")
+        print("\nLLM client not initialized. Check the .env configuration.")
+        print("Skipping this example.\n")
         return
     
     # Simulate conversation
@@ -89,7 +88,7 @@ def example_2_agent_chat():
 def example_3_batch_design():
     """Example 3: Batch design of multiple steel columns"""
     print("=" * 60)
-    print("Example 3: Batch design of steel columns with different specifications")
+    print("Example 3: Batch design comparison")
     print("=" * 60)
     
     model_path = "../PINN model/normal/model_20250123_165719.pth"
@@ -142,13 +141,13 @@ def example_3_batch_design():
                   f"{result['prediction_ratio']:<8.3f}")
     
     print("-" * 80)
-    print("\nObservation: As column length increases, compressive strength decreases significantly (slenderness ratio effect)\n")
+    print("\nAs column length increases, compressive strength decreases.\n")
 
 
 def example_4_parametric_study():
     """Example 4: Parametric study - Effect of yield strength"""
     print("=" * 60)
-    print("Example 4: Parametric study - Effect of yield strength on column strength")
+    print("Example 4: Parametric study on yield strength")
     print("=" * 60)
     
     model_path = "../PINN model/normal/model_20250123_165719.pth"
@@ -189,23 +188,20 @@ def example_4_parametric_study():
             prev_pn = pn
     
     print("-" * 60)
-    print("\nObservation: Increasing yield strength can significantly increase column compressive strength\n")
+    print("\nIncreasing yield strength increases column strength.\n")
 
 
 def main():
     """Run all examples"""
-    print("\n")
-    print("╔" + "═" * 58 + "╗")
-    print("║" + " " * 12 + "Steel Structure Design Agent - Usage Examples" + " " * 0 + "║")
-    print("╚" + "═" * 58 + "╝")
-    print("\n")
+    print("Steel Structure Design Agent - Usage Examples")
+    print()
     
     try:
         # Check model file
         model_path = "../PINN model/normal/model_20250123_165719.pth"
         if not os.path.exists(model_path):
-            print(f"⚠ Warning: Model file not found {model_path}")
-            print("Some examples may not run\n")
+            print(f"Warning: model file not found: {model_path}")
+            print("Some examples may not run.\n")
         
         # Run examples
         example_1_direct_calculation()
@@ -220,15 +216,15 @@ def main():
         example_4_parametric_study()
         
         print("=" * 60)
-        print("All example demonstrations completed!")
+        print("Example runs completed.")
         print("=" * 60)
-        print("\nTo start interactive Agent, please run: python agent.py")
+        print("\nTo start the interactive agent, run: python agent.py")
         print()
         
     except KeyboardInterrupt:
-        print("\n\nExample demonstration interrupted")
+        print("\n\nExample run interrupted")
     except Exception as e:
-        print(f"\n✗ Example execution error: {e}")
+        print(f"\nExample execution error: {e}")
         import traceback
         traceback.print_exc()
 

@@ -1,6 +1,5 @@
 """
-Quick Start Example for Complete Integrated System
-Demonstrates the full workflow: Building Design → Analysis → Strength Check
+Quick-start examples for the integrated system.
 """
 
 import sys
@@ -13,7 +12,7 @@ from integrated_design import CompleteIntegratedSystem
 def example_1_simple_office():
     """Example 1: Simple office building"""
     print("\n" + "=" * 70)
-    print("EXAMPLE 1: Simple Office Building")
+    print("Example 1: Simple office building")
     print("=" * 70)
 
     system = CompleteIntegratedSystem()
@@ -37,16 +36,16 @@ def example_1_simple_office():
     )
 
     if 'error' not in result:
-        print("\n✅ Example 1 completed successfully!")
-        print(f"Check outputs in: output/example_1_office/")
+        print("\nExample 1 completed.")
+        print(f"Output directory: output/example_1_office/")
     else:
-        print(f"\n❌ Example 1 failed: {result['error']}")
+        print(f"\nExample 1 failed: {result['error']}")
 
 
 def example_2_multi_story_frame():
     """Example 2: Multi-story steel frame"""
     print("\n" + "=" * 70)
-    print("EXAMPLE 2: Multi-Story Steel Frame")
+    print("Example 2: Multi-story steel frame")
     print("=" * 70)
 
     system = CompleteIntegratedSystem()
@@ -73,16 +72,16 @@ def example_2_multi_story_frame():
     )
 
     if 'error' not in result:
-        print("\n✅ Example 2 completed successfully!")
-        print(f"Check outputs in: output/example_2_multistory/")
+        print("\nExample 2 completed.")
+        print(f"Output directory: output/example_2_multistory/")
     else:
-        print(f"\n❌ Example 2 failed: {result['error']}")
+        print(f"\nExample 2 failed: {result['error']}")
 
 
 def example_3_opensees_only():
     """Example 3: Direct OpenSeesPy analysis (Task 3.3 only)"""
     print("\n" + "=" * 70)
-    print("EXAMPLE 3: Direct Structural Analysis (Task 3.3)")
+    print("Example 3: Direct structural analysis")
     print("=" * 70)
 
     from openSeesIntegrate.opensees_integration import OpenSeesIntegrationSystem
@@ -106,25 +105,23 @@ def example_3_opensees_only():
     )
 
     if 'error' not in result:
-        print("\n✅ Example 3 completed successfully!")
-        print(f"Check outputs in: output/example_3_portal/")
+        print("\nExample 3 completed.")
+        print(f"Output directory: output/example_3_portal/")
 
         # Print key results
         if 'analysis_results' in result:
             max_disp = result['analysis_results'].get('max_displacement', {})
-            print(f"\nKey Results:")
+            print(f"\nKey results:")
             print(f"  Max displacement: {abs(max_disp.get('value', 0)):.6f} in")
             print(f"  At node: {max_disp.get('node', 0)}")
     else:
-        print(f"\n❌ Example 3 failed: {result['error']}")
+        print(f"\nExample 3 failed: {result['error']}")
 
 
 def run_all_examples():
     """Run all examples"""
-    print("\n" + "=" * 70)
-    print("RUNNING ALL EXAMPLES")
-    print("This will demonstrate the complete integrated system")
-    print("=" * 70)
+    print("Running all examples")
+    print("This demonstrates the integrated system.")
 
     try:
         # Example 1: Simple office
@@ -137,19 +134,19 @@ def run_all_examples():
         example_3_opensees_only()
 
         print("\n" + "=" * 70)
-        print("✅ ALL EXAMPLES COMPLETED")
+        print("All examples completed.")
         print("=" * 70)
         print("\nGenerated outputs:")
         print("  - output/example_1_office/")
         print("  - output/example_3_portal/")
         print("\nEach directory contains:")
-        print("  • complete_design_report.json - Complete results")
-        print("  • blueprint.svg - Building visualization")
-        print("  • opensees_analysis/ - Analysis files and results")
-        print("  • generated_model.py - OpenSeesPy code")
+        print("  - complete_design_report.json - Complete results")
+        print("  - blueprint.svg - Building visualization")
+        print("  - opensees_analysis/ - Analysis files and results")
+        print("  - generated_model.py - OpenSeesPy code")
 
     except Exception as e:
-        print(f"\n❌ Error running examples: {e}")
+        print(f"\nError running examples: {e}")
         import traceback
         traceback.print_exc()
 
@@ -158,7 +155,7 @@ if __name__ == "__main__":
     import sys
 
     print("\n" + "=" * 70)
-    print("COMPLETE INTEGRATED SYSTEM - QUICK START EXAMPLES")
+    print("Integrated system quick-start examples")
     print("=" * 70)
     print("\nThis script demonstrates the integrated system:")
     print("  Task 3.1: Building Design")
