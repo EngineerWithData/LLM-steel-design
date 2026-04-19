@@ -1,14 +1,14 @@
 # LLM Agent Framework for Structural Steel Design
 
-An LLM agent prototype for structural steel design automation with integrated building layout generation, structural analysis, and visualization.
+An LLM agent prototype for structural steel design automation, which integrated building layout generation, structural analysis, and visualization.
 
 ## Project overview
 
-This repository combines three preliminary components: sbuilding layout generation, PINN-based strength prediction, and an automated structural analysis based on OpenSeesPy generation.
+This repository combines three preliminary components: building layout generation, PINN-based strength prediction, and an automated structural analysis based on OpenSeesPy code generation.
 
 **Project Information**:
 - **Version**: v3.0.0
-- **Developer**: Kai Chen (kchen137@alumni.jh.edu), Bartu (bartu@datatoolpack.com), Zhidong Zhang (zhidong9263@gmail.com), and Cristopher D. Moen (cris.moen@runtosolve.com).
+- **Developer**: Kai Chen (kchen137@alumni.jh.edu), Cem Bartu Cevik (bartu@datatoolpack.com), Zhidong Zhang (zhidong9263@gmail.com), and Cristopher D. Moen (cris.moen@runtosolve.com).
 - **Institution**: Johns Hopkins University, University of Virginia, Datatoolpack LLC, and RunToSolve LLC.
 - **Last Updated**: April 19, 2026
 
@@ -501,16 +501,28 @@ openseespy>=3.5.0        # NEW: For structural analysis
 ## Development Team
 
 - **Kai Chen** - PINN model development and Agent framework implementation
-- **Zhidong Zhang** - Project guidance, repository assembly, and post-processing
-- **Cem Bartu Cevik** - Geometry optimization module (under development)
+- **Zhidong Zhang** - ML model development, Project guidance, Repository Organization, and Post-processing
+- **Cem Bartu Cevik** - Geometry optimization module development
 - **Cristopher D. Moen** - Project advisor
 
 ## References
 
-1. AISC 360-16: Specification for Structural Steel Buildings
-2. Perry-Robertson Formula for Column Strength
-3. Physics-Informed Neural Networks (PINNs)
-4. OpenAI Function Calling Documentation
+1. OpenAI Function Calling Documentation
+2. ANSI/AISC. (2022). AISC 360-22: Specification for Structural Steel Buildings. https://www.aisc.org/aisc/publications/current-standards/aisc-360/
+3. ASCE. (2022). ASCE/SEI 7-22 Minimum Design Loads and Associated Criteria for Buildings and Other Structures. American Society of Civil Engineering. https://sp360.asce.org/personifyebusiness/Merchandise/Product-Details/productId/276865145
+4. Chen, J., & Bao, Y. (2025). Multi-agent large language model framework for code-compliant automated design of reinforced concrete structures. Automation in Construction, 177, 106331. https://doi.org/10.1016/j.autcon.2025.106331
+5. Geng, Z., Liu, J., Cao, R., Cheng, L., Wang, H., & Cheng, M. (2025). A Lightweight Large Language Model-Based Multi-Agent System for 2D Frame Structural Analysis (arXiv:2510.05414). arXiv. https://doi.org/10.48550/arXiv.2510.05414
+6. Liang, H., Kalaleh, M. T., & Mei, Q. (2025). Integrating Large Language Models for Automated Structural Analysis (arXiv:2504.09754). arXiv. https://doi.org/10.48550/arXiv.2504.09754
+7. Liang, H., Zhou, Y., Kalaleh, M. T., & Mei, Q. (2025). Automating Structural Engineering Workflows with Large Language Model Agents (arXiv:2510.11004). arXiv. https://doi.org/10.48550/arXiv.2510.11004
+8. Liu, J., Geng, Z., Cao, R., Cheng, L., Bocchini, P., & Cheng, M. (2025). A Large Language Model-Empowered Agent for Reliable and Robust Structural Analysis (arXiv:2507.02938). arXiv. https://doi.org/10.48550/arXiv.2507.02938
+9. Mazzoni, S., McKenna, F., Scott, M. H., & Fenves, G. L. (2006). OpenSees command language manual (pp. 137–158). Pacific Earthquake Engineering Research (PEER) Center.
+10. Sarker, P. K., Shoumik, S. C., Palit, S., Chowdhury, A. A. N., Alam, M. S., Gazi, M. D. H., & Rahman, M. (2025). Machine learning applications in predicting structural failures and earthquake damage. International Journal of Research in Civil Engineering and Technology, 6(1), 36–45. https://doi.org/10.22271/27078264.2025.v6.i1a.79
+11. Silvia, M. (2024). The OpenSeesPy Library—OpenSeesPy 3.5.1.3 documentation. https://openseespydoc.readthedocs.io/en/latest/index.html
+12. Wu, Q., Bansal, G., Zhang, J., Wu, Y., Li, B., Zhu, E., Jiang, L., Zhang, X., Zhang, S., Liu, J., Awadallah, A. H., White, R. W., Burger, D., & Wang, C. (2023). AutoGen: Enabling Next-Gen LLM Applications via Multi-Agent Conversation (arXiv:2308.08155). arXiv. https://doi.org/10.48550/arXiv.2308.08155
+13. Yu, H., Wang, Y., Cheng, T., Yan, Y., Dawson, K. A., Li, S. F. Y., Zheng, Y., & Jin, Y. (2025). Empowering scientific discovery with explainable small domain-specific and large language models. Artificial Intelligence Review, 58(12), 371. https://doi.org/10.1007/s10462-025-11365-w
+14. Zhang, Z., Chen, K., Cevik, C. B., & Moen, C. D. (2025). Mechanics-informed data-driven prediction model of steel column strength. Proceedings of the Annual Stability Conference Structural Stability Research Council.
+
+
 
 ## License
 
