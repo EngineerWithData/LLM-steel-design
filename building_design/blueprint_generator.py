@@ -164,16 +164,16 @@ def generate_blueprint(blueprint_params: dict, filename: str = "blueprint.svg") 
         center_floor_2d = perspective_project(center_floor_rot, vantage_point)
         room_centers_floor[rm.get("label", "Room")] = center_floor_2d
         
-        # Add room label
-        g.add(dwg.text(
-            rm.get("label", "Room"),
-            insert=shift(center_floor_2d),
-            text_anchor="middle",
-            alignment_baseline="middle",
-            font_size="14px",
-            fill="darkblue",
-            font_weight="bold"
-        ))
+        # # Add room label
+        # g.add(dwg.text(
+        #     rm.get("label", "Room"),
+        #     insert=shift(center_floor_2d),
+        #     text_anchor="middle",
+        #     alignment_baseline="middle",
+        #     font_size="14px",
+        #     fill="darkblue",
+        #     font_weight="bold"
+        # ))
         
         # Calculate roof center
         center_roof_3d = (rx + w / 2, ry + h / 2, building_elevation)
@@ -181,21 +181,21 @@ def generate_blueprint(blueprint_params: dict, filename: str = "blueprint.svg") 
         center_roof_2d = perspective_project(center_roof_rot, vantage_point)
         room_centers_roof[rm.get("label", "Room")] = center_roof_2d
     
-    # Draw room connections on floor
-    for conn in connections:
-        label_from = conn.get("from")
-        label_to = conn.get("to")
-        pt_from = room_centers_floor.get(label_from)
-        pt_to = room_centers_floor.get(label_to)
+    # # Draw room connections on floor
+    # for conn in connections:
+    #     label_from = conn.get("from")
+    #     label_to = conn.get("to")
+    #     pt_from = room_centers_floor.get(label_from)
+    #     pt_to = room_centers_floor.get(label_to)
         
-        if pt_from and pt_to:
-            g.add(dwg.line(
-                start=shift(pt_from),
-                end=shift(pt_to),
-                stroke="green",
-                stroke_width=1,
-                stroke_dasharray="5,5"
-            ))
+    #     if pt_from and pt_to:
+    #         g.add(dwg.line(
+    #             start=shift(pt_from),
+    #             end=shift(pt_to),
+    #             stroke="green",
+    #             stroke_width=1,
+    #             stroke_dasharray="5,5"
+    #         ))
     
     # Draw roof structure
     for rm in rooms:
