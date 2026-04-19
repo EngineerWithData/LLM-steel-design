@@ -1,53 +1,51 @@
 # LLM Agent Framework for Structural Steel Design
 
-A project for structural steel design automation with integrated building layout generation, structural analysis, and visualization.
+An LLM agent prototype for structural steel design automation with integrated building layout generation, structural analysis, and visualization.
 
 ## Project overview
 
-This repository combines building layout generation, automated structural analysis with OpenSeesPy, PINN-based strength verification, and an end-to-end design workflow.
+This repository combines three preliminary components: sbuilding layout generation, PINN-based strength prediction, and an automated structural analysis based on OpenSeesPy generation.
 
 **Project Information**:
 - **Version**: v3.0.0
-- **Developer**: Kai Chen (kchen137@alumni.jh.edu)
-- **Institution**: Johns Hopkins University
-- **Last Updated**: March 3, 2026
+- **Developer**: Kai Chen (kchen137@alumni.jh.edu), Bartu (bartu@datatoolpack.com), Zhidong Zhang (zhidong9263@gmail.com), and Cristopher D. Moen (cris.moen@runtosolve.com).
+- **Institution**: Johns Hopkins University, University of Virginia, Datatoolpack LLC, and RunToSolve LLC.
+- **Last Updated**: April 19, 2026
 
 ## Main features
 
 ### Implemented features
 
-#### 1. Building design (Task 3.1)
+#### 1. Building framing geometry design (Task 1)
 - Generate layouts from natural-language building descriptions
 - Create SVG blueprints with columns, beams, and connections
 - Calculate column loads automatically
-- Recommend W-shape sections based on load requirements
 
-#### 2. Steel strength verification (Task 3.2)
+#### 2. Steel strength verification (Task 2)
 - Calculate column compressive strength with a PINN model
 - Support chat-based interaction
 - Support multi-turn conversations with context memory
 - Recognize design parameters in multiple formats
 - Support OpenAI-compatible APIs and DashScope
 
-#### 3. Structural analysis automation (Task 3.3)
+#### 3. Structural analysis automation (Task 3)
 - Use separate agents for geometry parsing, code translation, and validation
 - Convert structural descriptions into a JSON intermediate format
 - Generate OpenSeesPy code from structured models
 - Validate syntax, semantics, and structural stability
 - Run OpenSeesPy analyses and parse results automatically
 - Generate engineering summaries with displacements, forces, and checks
-- Provide a W-section database with AISC properties
 
 #### 4. Integrated workflow
-- Support an end-to-end workflow from natural-language input to design results
+- Support an end-to-end workflow from natural-language input to analysis results
 - Generate JSON and natural-language reports
 - Coordinate multiple specialized components in one workflow
 
 ### Features under development
-
-- Steel beam flexural strength calculation
-- Nonlinear structural analysis
-- 3D building frames
+- Further tuning and optimization of the framing geometry design module
+- Strength prediction of structural steel components based on pre-trained ML models, such as flexural strength alculation
+- The accuracy, efficiency, robustness, and user interaction of this prototype agent-based
+steel building design will be further evaluated with AISC steel-framed building archetype examples
 
 ## Quick start
 
@@ -198,7 +196,7 @@ python examples/examples_quickstart.py
 
 ```
 LLM_steel_design/
-├── agent/                          # Agent core code (Task 3.2)
+├── agent/                          # Agent core code (Task 2)
 │   ├── agent.py                    # LLM Agent main program
 │   ├── config.py                   # Configuration file
 │   ├── models/
@@ -207,12 +205,12 @@ LLM_steel_design/
 │   │   └── steel_strength_tools.py # Steel strength calculation tools
 │   └── utils/
 │       └── create_scalers.py      # Scaler generation tool
-├── building_design/                # Building design module (Task 3.1)
+├── building_design/                # Building design module (Task 1)
 │   ├── __init__.py                 # Module initialization
 │   ├── building_parser.py          # Natural language building parser
 │   ├── blueprint_generator.py      # 3D blueprint SVG generator
 │   └── column_analyzer.py          # Column load analysis and optimization
-├── openSeesIntegrate/              # Structural analysis module (Task 3.3)
+├── openSeesIntegrate/              # Structural analysis module (Task 3)
 │   ├── agents/                     # Multi-agent system
 │   │   ├── geometry_agent.py       # Natural language → JSON
 │   │   ├── code_translator.py      # JSON → OpenSeesPy code
@@ -250,7 +248,7 @@ LLM_steel_design/
 
 ## Parameter Description
 
-### Steel Column Input Parameters
+### Steel Column Strength Prediction Input Parameters
 
 | Parameter | Symbol | Unit | Description | Supported Parameter Names |
 |-----------|--------|------|-------------|---------------------------|
@@ -281,20 +279,20 @@ LLM_steel_design/
 
 The system consists of three integrated tasks working together:
 
-#### Task 3.1: Building Design
+#### Task 1: Building Design
 - Natural language parsing for building descriptions
 - Automated room layout generation
 - 3D blueprint SVG visualization
 - Column load calculation and analysis
 
-#### Task 3.2: Steel Strength Verification
+#### Task 2: Steel Strength Verification
 - **Model Type**: Physics-Informed Neural Network (PINN)
 - **Input Features**: A, I, c, L, fy, delta_o (6 features)
 - **Output**: Steel column compressive strength Pn (kip)
 - **Physical Constraints**: Perry-Robertson formula
 - **Network Structure**: 3 hidden layers, 64 neurons per layer
 
-#### Task 3.3: Structural Analysis Automation
+#### Task 3: Structural Analysis Automation
 - **Multi-Agent Architecture**:
   - Geometry Agent: Natural language → Structural JSON
   - Code Translation Agent: JSON → OpenSeesPy code (template-based)
@@ -311,7 +309,7 @@ The system consists of three integrated tasks working together:
 
 ### Structural Analysis Documentation
 
-Task 3.3 provides fully automated structural analysis using OpenSeesPy. The workflow is:
+Task 3 provides fully automated structural analysis using OpenSeesPy. The workflow is:
 
 1. **Natural Language to JSON** – The Geometry Agent parses the user's description (e.g., "A two‑story frame with 20‑ft columns and a 30‑ft beam") and creates a structured JSON model.
 2. **JSON to OpenSeesPy** – The Code Translation Agent converts the JSON into a complete OpenSeesPy script based on validated templates.
@@ -347,7 +345,7 @@ This automation eliminates manual scripting errors and accelerates the design ve
 
 ### Test Statistics
 
-#### Task 3.3 tests
+#### Task 3 tests
 - **Core functionality tests**: 8/8 passed (100%)
 - **Force equilibrium**: Error < 0.001%
 - **Code generation**: 110+ lines of valid OpenSeesPy code
@@ -418,7 +416,7 @@ pytest -v -s
 pytest --cov=agent --cov-report=html
 ```
 
-### Performance Metrics
+<!-- ### Performance Metrics
 
 | Metric | Actual Value | Target Value | Status |
 |--------|--------------|--------------|--------|
@@ -460,7 +458,7 @@ Easily switch between different LLM services through environment variables, comp
 ### 7. Modular Design
 - Clear code structure
 - Easy to extend and maintain
-- Complete test coverage
+- Complete test coverage -->
 
 ## Common Questions
 
@@ -503,7 +501,7 @@ openseespy>=3.5.0        # NEW: For structural analysis
 ## Development Team
 
 - **Kai Chen** - PINN model development and Agent framework implementation
-- **Zhidong Zhang** - Project guidance and post-processing
+- **Zhidong Zhang** - Project guidance, repository assembly, and post-processing
 - **Cem Bartu Cevik** - Geometry optimization module (under development)
 - **Cristopher D. Moen** - Project advisor
 
@@ -518,16 +516,21 @@ openseespy>=3.5.0        # NEW: For structural analysis
 
 This project is for academic research purposes.
 
-## Contact
+## Associated research paper
+
+This associated research paper is available in "2026 Proceedings of the SSRC Annual Stability Conference":
+https://files.ssrcweb.org/proceedings/2026/Zhang_et_al_SSRC_2026.pdf -->
+
+<!-- ## Contact
 
 For questions or suggestions, please contact:
 - **Developer**: Kai Chen
 - **Email**: kchen137@alumni.jh.edu
 - **Institution**: Johns Hopkins University
-- **GitHub**: https://github.com/chenkai66/steel-design
+- **GitHub**: https://github.com/EngineerWithData/LLM-steel-design -->
 
 ---
 
 **Version**: v3.0.0
-**Last Updated**: March 3, 2026
-**Status**: Task 3.1 complete | Task 3.2 complete | Task 3.3 complete | Full integration complete
+**Last Updated**: April 19, 2026
+**Status**: Task 1 complete | Task 2 complete | Task 3 complete | Full integration complete
