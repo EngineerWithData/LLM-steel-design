@@ -526,7 +526,7 @@ openseespy>=3.5.0        # NEW: For structural analysis
 
 ## License
 
-This project is for academic research purposes.
+This project is licensed under the MIT License. See the [LICENSE](LICENSE) file for details.
 
 ## Associated research paper
 
