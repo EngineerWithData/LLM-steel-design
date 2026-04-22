@@ -10,7 +10,7 @@ This repository combines three preliminary components: building layout generatio
 - **Version**: v3.0.0
 - **Developer**: Kai Chen (kchen137@alumni.jh.edu), Cem Bartu Cevik (bartu@datatoolpack.com), Zhidong Zhang (zhidong9263@gmail.com), and Cristopher D. Moen (cris.moen@runtosolve.com).
 - **Institution**: Johns Hopkins University, University of Virginia, Datatoolpack LLC, and RunToSolve LLC.
-- **Last Updated**: April 19, 2026
+- **Last Updated**: April 21, 2026
 
 ## Main features
 
@@ -533,16 +533,4 @@ This project is licensed under the MIT License. See the [LICENSE](LICENSE) file 
 This associated research paper is available in "2026 Proceedings of the SSRC Annual Stability Conference":
 https://files.ssrcweb.org/proceedings/2026/Zhang_et_al_SSRC_2026.pdf -->
 
-<!-- ## Contact
 
-For questions or suggestions, please contact:
-- **Developer**: Kai Chen
-- **Email**: kchen137@alumni.jh.edu
-- **Institution**: Johns Hopkins University
-- **GitHub**: https://github.com/EngineerWithData/LLM-steel-design -->
-
----
-
-**Version**: v3.0.0
-**Last Updated**: April 19, 2026
-**Status**: Task 1 complete | Task 2 complete | Task 3 complete | Full integration complete
