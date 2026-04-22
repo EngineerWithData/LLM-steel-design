@@ -501,8 +501,8 @@ openseespy>=3.5.0        # NEW: For structural analysis
 ## Development Team
 
 - **Kai Chen** - PINN model development and Agent framework implementation
-- **Zhidong Zhang** - ML model development, Project guidance, Repository Organization, and Post-processing
 - **Cem Bartu Cevik** - Geometry optimization module development
+- **Zhidong Zhang** - ML model development, Project guidance, Repository Organization, and Post-processing
 - **Cristopher D. Moen** - Project advisor
 
 ## References
@@ -531,6 +531,6 @@ This project is licensed under the MIT License. See the [LICENSE](LICENSE) file 
 ## Associated research paper
 
 This associated research paper is available in "2026 Proceedings of the SSRC Annual Stability Conference":
-https://files.ssrcweb.org/proceedings/2026/Zhang_et_al_SSRC_2026.pdf -->
+https://files.ssrcweb.org/proceedings/2026/Zhang_et_al_SSRC_2026.pdf
 
 
