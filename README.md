@@ -8,7 +8,7 @@ This repository combines three preliminary components: building layout generatio
 
 **Project Information**:
 - **Version**: v3.0.0
-- **Developer**: Kai Chen (kchen137@alumni.jh.edu), Cem Bartu Cevik (bartu@datatoolpack.com), Zhidong Zhang (zhidong9263@gmail.com), and Cristopher D. Moen (cris.moen@runtosolve.com).
+- **Developer**: Kai Chen (kchen137@alumni.jh.edu), Cem Bartu Cevik (bartu@datatoolpack.com), Zhidong Zhang (zachzhang9266@yahoo.com), and Cristopher D. Moen (cris.moen@runtosolve.com).
 - **Institution**: Johns Hopkins University, University of Virginia, Datatoolpack LLC, and RunToSolve LLC.
 - **Last Updated**: April 21, 2026
 
